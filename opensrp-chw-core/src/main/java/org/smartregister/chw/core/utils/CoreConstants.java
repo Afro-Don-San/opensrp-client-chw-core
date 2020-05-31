@@ -205,6 +205,13 @@ public class CoreConstants {
         private static final String PNC_DANGER_SIGNS_OUTCOME_FORM = "pnc_danger_signs_outcome";
         private static final String MALARIA_FOLLOW_UP_HF_FORM = "malaria_follow_up_hf";
 
+        public static final String PATHFINDER_FAMILY_PLANNING_REGISTRATION_FORM = "pathfinder_female_family_planning_registration";
+        public static final String PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM = "pathfinder_female_family_planning_change_method";
+        public static final String PATHFINDER_FAMILY_PLANNING_INTRODUCTION = "pathfinder_family_planning_introduction";
+        public static final String PATHFINDER_PREGNANCY_SCREENING = "pathfinder_pregnancy_screening";
+        public static final String PATHFINDER_CHOOSE_FAMILY_PLANNING_METHOD = "pathfinder_family_planning_method_choice";
+        public static final String PATHFINDER_GIVE_FAMILY_PLANNING_METHOD = "pathfinder_give_family_planning_method";
+
         public static AssetManager assetManager;
         public static Locale locale;
 
@@ -318,7 +325,7 @@ public class CoreConstants {
         }
 
         public static String getFpChangeMethodForm(String gender) {
-            String formName = gender.equalsIgnoreCase(Gender.MALE.toString()) ? MALE_FAMILY_PLANNING_CHANGE_METHOD_FORM : FEMALE_FAMILY_PLANNING_CHANGE_METHOD_FORM;
+            String formName = gender.equalsIgnoreCase(Gender.MALE.toString()) ? MALE_FAMILY_PLANNING_CHANGE_METHOD_FORM : PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM;
             return Utils.getLocalForm(formName, locale, assetManager);
         }
 
@@ -353,6 +360,30 @@ public class CoreConstants {
 
         public static String getChildGbvReferralForm() {
             return CHILD_GBV_REFERRAL_FORM;
+        }
+
+        public static String getPathfinderFamilyPlanningRegistrationForm() {
+            return PATHFINDER_FAMILY_PLANNING_REGISTRATION_FORM;
+        }
+
+        public static String getPathfinderFamilyPlanningChangeMethodForm() {
+            return PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM;
+        }
+
+        public static String getPathfinderFamilyPlanningIntroduction() {
+            return PATHFINDER_FAMILY_PLANNING_INTRODUCTION;
+        }
+
+        public static String getPathfinderPregnancyScreening() {
+            return PATHFINDER_PREGNANCY_SCREENING;
+        }
+
+        public static String getPathfinderChooseFamilyPlanningMethod() {
+            return PATHFINDER_CHOOSE_FAMILY_PLANNING_METHOD;
+        }
+
+        public static String getPathfinderGiveFamilyPlanningMethod() {
+            return PATHFINDER_GIVE_FAMILY_PLANNING_METHOD;
         }
 
         public static String getReferralFollowupForm() {
