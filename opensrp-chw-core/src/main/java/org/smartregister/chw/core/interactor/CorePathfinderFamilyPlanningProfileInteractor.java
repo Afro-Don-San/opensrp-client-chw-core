@@ -6,6 +6,7 @@ import com.adosa.opensrp.chw.fp.contract.BaseFpProfileContract;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.interactor.BasePathfinderFpProfileInteractor;
+import com.google.gson.Gson;
 
 import org.joda.time.LocalDate;
 import org.smartregister.chw.anc.domain.MemberObject;
@@ -32,6 +33,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+
 public class CorePathfinderFamilyPlanningProfileInteractor extends BasePathfinderFpProfileInteractor implements CorePathfinderFamilyPlanningMemberProfileContract.Interactor {
     private Context context;
 
@@ -41,8 +43,8 @@ public class CorePathfinderFamilyPlanningProfileInteractor extends BasePathfinde
 
     @Override
     public void updateProfileFpStatusInfo(PathfinderFpMemberObject memberObject, BaseFpProfileContract.InteractorCallback callback) {
+        Timber.e("Coze ::updateProfileFpStatusInfo "+new Gson().toJson(memberObject));
         Runnable runnable = new Runnable() {
-
             Date lastVisitDate = getLastVisitDate(memberObject);
             AlertStatus familyAlert = AlertDao.getFamilyAlertStatus(memberObject.getFamilyBaseEntityId());
             Alert upcomingService = getAlerts(context, memberObject.getBaseEntityId());

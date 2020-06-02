@@ -56,52 +56,18 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         Date lastVisitDate = null;
         Visit lastVisit;
         Date fpDate = PathfinderFamilyPlanningUtil.parseFpStartDate(fp_date);
-        if (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_INJECTABLE)) {
-            lastVisit = PathfinderFpDao.getLatestInjectionVisit(memberObject.getBaseEntityId(), fpMethodUsed);
-        } else {
-            lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT, fpMethodUsed);
-        }
-        if (lastVisit != null) {
-            lastVisitDate = lastVisit.getDate();
-        } else {
+        lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD, fpMethodUsed);
+        if (lastVisit == null) {
             lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_REGISTRATION, fpMethodUsed);
-            lastVisitDate = lastVisit.getDate();
         }
+        lastVisitDate = lastVisit.getDate();
         PathfinderFpAlertRule alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, fp_pillCycles, fpMethod);
         if (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_COC) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_POP) ||
-                fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_MALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_INJECTABLE)) {
+                fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_MALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_SDM)) {
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
-            if (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_INJECTABLE)) {
-                serviceName = fpMethod;
-            } else {
-                serviceName = MessageFormat.format(context.getString(R.string.refill), fpMethod);
-            }
-        } //TODO coze  handle this
-//        else if (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_IUCD) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_STERLIZATION)) {
-//            if (lastVisit == null) {
-//                serviceDueDate = alertRule.getDueDate();
-//                serviceOverDueDate = alertRule.getOverDueDate();
-//                serviceName = MessageFormat.format(context.getString(R.string.follow_up_one), fpMethod);
-//            } else {
-//                if (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_IUCD)) {
-//                    serviceDueDate = (DateTimeFormat.forPattern("dd-MM-yyyy").parseLocalDate(fp_date).plusMonths(4)).toDate();
-//                    serviceOverDueDate = (DateTimeFormat.forPattern("dd-MM-yyyy").parseLocalDate(fp_date).plusMonths(4).plusWeeks(1)).toDate();
-//                    serviceName = MessageFormat.format(context.getString(R.string.follow_up_two), fpMethod);
-//                } else {
-//                    count = PathfinderFpDao.getCountFpVisits(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT, fpMethod);
-//                    if (count == 2) {
-//                        serviceDueDate = (DateTimeFormat.forPattern("dd-MM-yyyy").parseLocalDate(fp_date).plusMonths(1)).toDate();
-//                        serviceOverDueDate = (DateTimeFormat.forPattern("dd-MM-yyyy").parseLocalDate(fp_date).plusMonths(1).plusWeeks(2)).toDate();
-//                        serviceName = MessageFormat.format(context.getString(R.string.follow_up_three), fpMethod);
-//                    } else {
-//                        serviceDueDate = (DateTimeFormat.forPattern("dd-MM-yyyy").parseLocalDate(fp_date).plusDays(7)).toDate();
-//                        serviceOverDueDate = (DateTimeFormat.forPattern("dd-MM-yyyy").parseLocalDate(fp_date).plusDays(9)).toDate();
-//                        serviceName = MessageFormat.format(context.getString(R.string.follow_up_two), fpMethod);
-//                    }
-//                }
-//            }
-//        }
+            serviceName = MessageFormat.format(context.getString(R.string.refill), fpMethod);
+        }
 
         BaseUpcomingService upcomingService = new BaseUpcomingService();
         if (serviceName != null) {
