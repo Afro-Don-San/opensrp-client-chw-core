@@ -724,6 +724,7 @@ public class CoreConstants {
         public static final String PNC_HEALTH_FACILITY_VISIT = "pnc-health-facility-schedule-rule.yml";
         public static final String MALARIA_FOLLOW_UP_VISIT = "malaria-followup-rules.yml";
         public static final String FP_COC_POP_REFILL = "fp-coc-pop-refill-rule.yml";
+        public static final String PATHFINDER_FP_COC_POP_REFILL = "pathfinder_fp-coc-pop-refill-rule.yml";
         public static final String FP_CONDOM_REFILL = "fp-condom-refill-rule.yml";
         public static final String FP_INJECTION_DUE = "fp-injection-due-rule.yml";
         public static final String FP_FEMALE_STERILIZATION = "fp-female-sterilization-rule.yml";

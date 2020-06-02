@@ -20,6 +20,7 @@ import com.adosa.opensrp.chw.fp.activity.BasePathfinderFpProfileActivity;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jeasy.rules.api.Rules;
@@ -375,20 +376,15 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if (pathfinderFpMemberObject.getFpMethod().equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_INJECTABLE)) {
-                lastVisit = PathfinderFpDao.getLatestInjectionVisit(pathfinderFpMemberObject.getBaseEntityId(), pathfinderFpMemberObject.getFpMethod());
-            } else {
-                lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), FP_FOLLOW_UP_VISIT, pathfinderFpMemberObject.getFpMethod());
-            }
+            lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), FP_FOLLOW_UP_VISIT, pathfinderFpMemberObject.getFpMethod());
 
-            if (!pathfinderFpMemberObject.getFpMethod().equals("0")) {  //TODO coze update empty fp method to ""
+            Timber.e("Coze == "+new Gson().toJson(pathfinderFpMemberObject));
+            if (!pathfinderFpMemberObject.getFpStartDate().equals("")) {
                 Date lastVisitDate;
-                if (lastVisit != null) {
-                    lastVisitDate = lastVisit.getDate();
-                } else {
+                if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_REGISTRATION, pathfinderFpMemberObject.getFpMethod());
-                    lastVisitDate = lastVisit.getDate();
                 }
+                lastVisitDate = lastVisit.getDate();
 
                 Rules rule = PathfinderFamilyPlanningUtil.getFpRules(pathfinderFpMemberObject.getFpMethod());
                 Integer pillCycles = PathfinderFpDao.getLastPillCycle(pathfinderFpMemberObject.getBaseEntityId(), pathfinderFpMemberObject.getFpMethod());
@@ -404,6 +400,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
             ) {
                 updateFollowUpVisitButton(fpAlertRule.getButtonStatus());
             }
+            Timber.i("Initiation method = %s", pathfinderFpMemberObject.getFpInitiationStage());
             if (fpAlertRule == null && pathfinderFpMemberObject.getFpMethod().equals("0")) {
                 if (pathfinderFpMemberObject.getFpInitiationStage().equals("")) {
                     showIntroductionToFpButton();
@@ -413,9 +410,9 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                     showChooseFpMethodButton();
                 } else if (pathfinderFpMemberObject.getFpInitiationStage().equals(PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_PREGNANCY_SCREENING) && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
                     showIssueANCReferralButton();
-                } else if (pathfinderFpMemberObject.getFpInitiationStage().equals(PathfinderFamilyPlanningConstants.EventType.CHOOSING_FAMILY_PLANNING_METHOD)) {
-                    showGiveFpMethodButton();
                 }
+            } else if (pathfinderFpMemberObject.getFpInitiationStage().equalsIgnoreCase(PathfinderFamilyPlanningConstants.EventType.CHOOSING_FAMILY_PLANNING_METHOD)) {
+                showGiveFpMethodButton();
             } else {
                 updateFollowUpVisitStatusRow(lastVisit);
             }
