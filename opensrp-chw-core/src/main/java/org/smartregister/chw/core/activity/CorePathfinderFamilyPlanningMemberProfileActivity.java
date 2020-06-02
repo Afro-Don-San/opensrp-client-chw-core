@@ -378,17 +378,16 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
         protected Void doInBackground(Void... voids) {
             lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), FP_FOLLOW_UP_VISIT, pathfinderFpMemberObject.getFpMethod());
 
-            Timber.e("Coze == "+new Gson().toJson(pathfinderFpMemberObject));
             if (!pathfinderFpMemberObject.getFpStartDate().equals("")) {
                 Date lastVisitDate;
                 if (lastVisit == null) {
-                    lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_REGISTRATION, pathfinderFpMemberObject.getFpMethod());
+                    lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
                 }
                 lastVisitDate = lastVisit.getDate();
-
                 Rules rule = PathfinderFamilyPlanningUtil.getFpRules(pathfinderFpMemberObject.getFpMethod());
-                Integer pillCycles = PathfinderFpDao.getLastPillCycle(pathfinderFpMemberObject.getBaseEntityId(), pathfinderFpMemberObject.getFpMethod());
-                fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), pillCycles, pathfinderFpMemberObject.getFpMethod());
+                //TODO coze implement obtaining of number of pills given in the last visit
+//                Integer pillCycles = PathfinderFpDao.getLastPillCycle(pathfinderFpMemberObject.getBaseEntityId(), pathfinderFpMemberObject.getFpMethod());
+                fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), 1, pathfinderFpMemberObject.getFpMethod());
             }
             return null;
         }
@@ -411,7 +410,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 } else if (pathfinderFpMemberObject.getFpInitiationStage().equals(PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_PREGNANCY_SCREENING) && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
                     showIssueANCReferralButton();
                 }
-            } else if (pathfinderFpMemberObject.getFpInitiationStage().equalsIgnoreCase(PathfinderFamilyPlanningConstants.EventType.CHOOSING_FAMILY_PLANNING_METHOD)) {
+            } else if (pathfinderFpMemberObject.getFpInitiationStage().equalsIgnoreCase(PathfinderFamilyPlanningConstants.EventType.CHOOSING_FAMILY_PLANNING_METHOD) && pathfinderFpMemberObject.getFpStartDate().equals("")) {
                 showGiveFpMethodButton();
             } else {
                 updateFollowUpVisitStatusRow(lastVisit);

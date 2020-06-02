@@ -25,11 +25,11 @@ public class PathfinderFamilyPlanningUtil extends com.adosa.opensrp.chw.fp.util.
         switch (fpMethod) {
             case PathfinderFamilyPlanningConstants.DBConstants.FP_POP:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_COC:
-                fpRule = CoreChwApplication.getInstance().getRulesEngineHelper().rules(CoreConstants.RULE_FILE.FP_COC_POP_REFILL);
+                fpRule = CoreChwApplication.getInstance().getRulesEngineHelper().rules(CoreConstants.RULE_FILE.PATHFINDER_FP_COC_POP_REFILL);
                 break;
             case PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_MALE_CONDOM:
-                fpRule = CoreChwApplication.getInstance().getRulesEngineHelper().rules(CoreConstants.RULE_FILE.FP_CONDOM_REFILL);
+                fpRule = CoreChwApplication.getInstance().getRulesEngineHelper().rules(CoreConstants.RULE_FILE.PATHFINDER_FP_CONDOM_REFILL);
                 break;
             default:
                 break;

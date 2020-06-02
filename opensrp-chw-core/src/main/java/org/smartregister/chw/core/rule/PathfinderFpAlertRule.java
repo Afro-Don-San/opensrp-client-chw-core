@@ -39,13 +39,15 @@ public class PathfinderFpAlertRule implements ICommonRule {
         this.visitID = visitID;
     }
 
-    public boolean isCocPopValid(int dueDay, int overdueDate) {
+    public boolean isCocPopValid(int dueDay, int overdueDate, int daysFromOverdueTillExpiry) {
         if (lastVisitDate != null) {
             this.dueDate = (new DateTime(this.lastVisitDate)).plusDays(this.pillCycles * 28).minusDays(dueDay);
             this.overDueDate = (new DateTime(this.lastVisitDate)).plusDays(this.pillCycles * 28).minusDays(overdueDate);
+            this.expiryDate = (new DateTime(this.lastVisitDate)).plusDays(this.pillCycles * 28).plusDays(daysFromOverdueTillExpiry);
         } else {
             this.dueDate = (new DateTime(this.fpDate)).plusDays(this.pillCycles * 28).minusDays(dueDay);
             this.overDueDate = (new DateTime(this.fpDate)).plusDays(this.pillCycles * 28).minusDays(overdueDate);
+            this.expiryDate = (new DateTime(this.fpDate)).plusDays(this.pillCycles * 28).plusDays(daysFromOverdueTillExpiry);
         }
         return true;
     }
@@ -158,72 +160,28 @@ public class PathfinderFpAlertRule implements ICommonRule {
 
     @Override
     public String getRuleKey() {
-        return "fpAlertRule";
+        return "pathfinderFpAlertRule";
     }
 
     @Override
     public String getButtonStatus() {
         DateTime lastVisit = lastVisitDate;
         DateTime currentDate = new DateTime(new LocalDate().toDate());
-        int monthOfYear = new DateTime(lastVisitDate).getMonthOfYear();
-        int year = new DateTime(lastVisitDate).getYear();
-
-        if (lastVisitDate != null) {
-            if (expiryDate != null) {
-                if ((lastVisit.isAfter(dueDate) || lastVisit.isEqual(dueDate)) && lastVisit.isBefore(expiryDate))
-                    return CoreConstants.VISIT_STATE.VISIT_DONE;
-                if (lastVisit.isBefore(dueDate)) {
-                    if (currentDate.isBefore(overDueDate) && (currentDate.isAfter(dueDate) || currentDate.isEqual(dueDate)))
-                        return CoreConstants.VISIT_STATE.DUE;
-
-                    if (currentDate.isBefore(expiryDate) && (currentDate.isAfter(overDueDate) || currentDate.isEqual(overDueDate)))
-                        return CoreConstants.VISIT_STATE.OVERDUE;
-                    if (currentDate.isBefore(dueDate) && currentDate.isBefore(expiryDate)) {
-                        return CoreConstants.VISIT_STATE.NOT_DUE_YET;
-                    }
-                }
-            } else {
-                if (!(fpMethod.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_MALE_CONDOM)) && !(fpMethod.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM))) {
-                    if (currentDate.isBefore(overDueDate) && (currentDate.isAfter(dueDate) || currentDate.isEqual(dueDate)))
-                        return CoreConstants.VISIT_STATE.DUE;
-                    if (currentDate.isAfter(overDueDate) || currentDate.isEqual(overDueDate))
-                        return CoreConstants.VISIT_STATE.OVERDUE;
-
-                    return CoreConstants.VISIT_STATE.VISIT_DONE;
-                } else {
-                    if ((monthOfYear == DateTime.now().getMonthOfYear()) && (year == DateTime.now().getYear())) {
-                        return CoreConstants.VISIT_STATE.VISIT_DONE;
-                    }
-                    if (currentDate.isBefore(overDueDate))
-                        return CoreConstants.VISIT_STATE.DUE;
-                    if (currentDate.isAfter(overDueDate) || currentDate.isEqual(overDueDate))
-                        return CoreConstants.VISIT_STATE.OVERDUE;
-                }
-
-
-            }
-
-        } else {
-            if (expiryDate != null) {
-                if (currentDate.isBefore(dueDate) && currentDate.isBefore(expiryDate)) {
-                    return CoreConstants.VISIT_STATE.NOT_DUE_YET;
-                }
+        if (expiryDate != null) {
+            if ((lastVisit.isAfter(dueDate) || lastVisit.isEqual(dueDate)) && lastVisit.isBefore(expiryDate))
+                return CoreConstants.VISIT_STATE.VISIT_DONE;
+            if (lastVisit.isBefore(dueDate)) {
                 if (currentDate.isBefore(overDueDate) && (currentDate.isAfter(dueDate) || currentDate.isEqual(dueDate)))
                     return CoreConstants.VISIT_STATE.DUE;
 
                 if (currentDate.isBefore(expiryDate) && (currentDate.isAfter(overDueDate) || currentDate.isEqual(overDueDate)))
                     return CoreConstants.VISIT_STATE.OVERDUE;
-            } else {
-                if (currentDate.isBefore(dueDate)) {
+                if (currentDate.isBefore(dueDate) && currentDate.isBefore(expiryDate)) {
                     return CoreConstants.VISIT_STATE.NOT_DUE_YET;
                 }
-                if (currentDate.isBefore(overDueDate) && (currentDate.isAfter(dueDate) || currentDate.isEqual(dueDate)))
-                    return CoreConstants.VISIT_STATE.DUE;
-
-                if ((currentDate.isAfter(overDueDate) || currentDate.isEqual(overDueDate)))
-                    return CoreConstants.VISIT_STATE.OVERDUE;
             }
         }
+
 
         return CoreConstants.VISIT_STATE.EXPIRED;
     }
