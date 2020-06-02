@@ -52,25 +52,16 @@ public class PathfinderFpAlertRule implements ICommonRule {
         return true;
     }
 
-    public boolean isCondomValid(int dueDay, int overdueDate) {
+    public boolean isCondomValid(int dueDay, int overdueDate, int daysFromOverdueTillExpiry) {
         if (lastVisitDate != null) {
-            int monthOfYear = new DateTime(lastVisitDate).getMonthOfYear();
-            int year = new DateTime(lastVisitDate).getYear();
-            if ((monthOfYear == DateTime.now().getMonthOfYear()) && (year == DateTime.now().getYear())) {
-                this.dueDate = new DateTime().plusMonths(1).withDayOfMonth(dueDay);
-                this.overDueDate = new DateTime().plusMonths(1).withDayOfMonth(overdueDate);
-            } else {
-                if ((year == DateTime.now().getYear()) && ((DateTime.now().getMonthOfYear()) - (monthOfYear) == 1)) {
-                    this.dueDate = new DateTime().withDayOfMonth(dueDay);
-                    this.overDueDate = new DateTime().withDayOfMonth(overdueDate);
-                } else {
-                    this.dueDate = lastVisitDate.withDayOfMonth(dueDay).plusMonths(1);
-                    this.overDueDate = lastVisitDate.withDayOfMonth(overdueDate).plusMonths(1);
-                }
-            }
+            this.dueDate = (new DateTime(this.lastVisitDate)).plusDays(28).minusDays(dueDay);
+            this.overDueDate = (new DateTime(this.lastVisitDate)).plusDays(28).minusDays(overdueDate);
+            this.expiryDate = (new DateTime(this.lastVisitDate)).plusDays(28).plusDays(daysFromOverdueTillExpiry);
+
         } else {
-            this.dueDate = fpDate.plusMonths(1).withDayOfMonth(dueDay);
-            this.overDueDate = fpDate.plusMonths(1).withDayOfMonth(overdueDate);
+            this.dueDate = (new DateTime(this.fpDate)).plusDays(28).minusDays(dueDay);
+            this.overDueDate = (new DateTime(this.fpDate)).plusDays(28).minusDays(overdueDate);
+            this.expiryDate = (new DateTime(this.fpDate)).plusDays(28).plusDays(daysFromOverdueTillExpiry);
         }
         return true;
     }
