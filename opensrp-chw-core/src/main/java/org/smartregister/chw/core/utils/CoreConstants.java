@@ -630,6 +630,24 @@ public class CoreConstants {
                 return Utils.getLocalForm(FAMILY_PLANNING_FOLLOWUP_SIDE_EFFECTS, locale, assetManager);
             }
         }
+
+        public static class PathfinderFamilyPlanningFollowUpVisitUtils {
+            private static final String FAMILY_PLANNING_FOLLOWUP_COUNSEL = "pathfinder_family_planning_followup_counsel";
+            private static final String FAMILY_PLANNING_FOLLOWUP_RESUPPLY = "pathfinder_family_planning_followup_resupply";
+            private static final String FAMILY_PLANNING_FOLLOWUP_SIDE_EFFECTS = "fp_followup_side_effects";
+
+            public static String getFamilyPlanningFollowupCounsel() {
+                return Utils.getLocalForm(FAMILY_PLANNING_FOLLOWUP_COUNSEL, locale, assetManager);
+            }
+
+            public static String getFamilyPlanningFollowupResupply() {
+                return Utils.getLocalForm(FAMILY_PLANNING_FOLLOWUP_RESUPPLY, locale, assetManager);
+            }
+
+            public static String getFamilyPlanningFollowupSideEffects() {
+                return Utils.getLocalForm(FAMILY_PLANNING_FOLLOWUP_SIDE_EFFECTS, locale, assetManager);
+            }
+        }
     }
 
     public static class RELATIONSHIP {
