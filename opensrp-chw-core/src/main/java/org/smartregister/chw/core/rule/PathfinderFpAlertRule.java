@@ -1,7 +1,5 @@
 package org.smartregister.chw.core.rule;
 
-import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;

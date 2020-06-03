@@ -3,7 +3,6 @@ package org.smartregister.chw.core.domain;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 public class ReportHia2IndicatorTest {
