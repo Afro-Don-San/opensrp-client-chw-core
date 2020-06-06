@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.provider.BasePathfinderFpRegisterProvider;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jeasy.rules.api.Rules;
@@ -26,6 +27,8 @@ import org.smartregister.view.contract.SmartRegisterClient;
 
 import java.util.Date;
 import java.util.Set;
+
+import timber.log.Timber;
 
 /**
  * Created by cozej4 on 4/28/20.
@@ -128,23 +131,37 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
             dayFp = Utils.getValue(pc.getColumnmaps(), PathfinderFamilyPlanningConstants.DBConstants.FP_FP_START_DATE, true);
             fpMethod = Utils.getValue(pc.getColumnmaps(), PathfinderFamilyPlanningConstants.DBConstants.FP_METHOD_ACCEPTED, false);
             pillCycles = PathfinderFpDao.getLastPillCycle(baseEntityID, fpMethod);
-            if (fpMethod.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_INJECTABLE)) {
-                lastVisit = PathfinderFpDao.getLatestInjectionVisit(baseEntityID, fpMethod);
-            } else {
+
+            lastVisit = PathfinderFpDao.getLatestFpVisit(baseEntityID, PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT, fpMethod);
+
+            if (lastVisit == null) {
                 lastVisit = PathfinderFpDao.getLatestFpVisit(baseEntityID, PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD, fpMethod);
+            }
+
+            if (lastVisit == null) {
+                lastVisit = PathfinderFpDao.getLatestFpVisit(baseEntityID);
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void param) {
-            Date fpDate = new Date(Long.parseLong(dayFp));
-            Date lastVisitDate = null;
+            Timber.e("Coze :: CorePathfinderFpProvider " + new Gson().toJson(lastVisit));
+            Date fpDate = null;
+            try {
+                fpDate = new Date(Long.parseLong(dayFp));
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+            Date lastVisitDate;
             if (lastVisit != null) {
                 lastVisitDate = lastVisit.getDate();
 
                 Rules rule = PathfinderFamilyPlanningUtil.getFpRules(fpMethod);
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, pillCycles, fpMethod);
+
+
+                Timber.e("Coze :: fpAlertRule " + new Gson().toJson(fpAlertRule));
 
                 if (fpAlertRule != null
                         && StringUtils.isNotBlank(fpAlertRule.getVisitID())

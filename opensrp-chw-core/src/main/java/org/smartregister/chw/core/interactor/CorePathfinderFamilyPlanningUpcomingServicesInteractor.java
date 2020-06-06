@@ -3,7 +3,7 @@ package org.smartregister.chw.core.interactor;
 import android.content.Context;
 
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
-import com.adosa.opensrp.chw.fp.domain.PathfinderFpAlertObject;
+import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
 
 import org.jeasy.rules.api.Rules;
@@ -19,6 +19,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import timber.log.Timber;
 
 
 public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends BaseAncUpcomingServicesInteractor {
@@ -43,22 +45,32 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         Date serviceOverDueDate = null;
         String serviceName = null;
         String fpMethodUsed = null;
-        List<PathfinderFpAlertObject> familyPlanningList = PathfinderFpDao.getFpDetails(memberObject.getBaseEntityId());
-        if (familyPlanningList.size() > 0) {
-            for (PathfinderFpAlertObject familyPlanning : familyPlanningList) {
-                fpMethodUsed = familyPlanning.getFpMethod();
-                fp_date = familyPlanning.getFpStartDate();
-                fp_pillCycles = PathfinderFpDao.getLastPillCycle(memberObject.getBaseEntityId(), fpMethodUsed);
-                rule = PathfinderFamilyPlanningUtil.getFpRules(fpMethodUsed);
-            }
-        }
+        PathfinderFpMemberObject pathfinderFpAlertObject = PathfinderFpDao.getMember(memberObject.getBaseEntityId());
+
+        fpMethodUsed = pathfinderFpAlertObject.getFpMethod();
+        fp_date = pathfinderFpAlertObject.getFpStartDate();
+        fp_pillCycles = PathfinderFpDao.getLastPillCycle(memberObject.getBaseEntityId(), fpMethodUsed);
+        rule = PathfinderFamilyPlanningUtil.getFpRules(fpMethodUsed);
+
         fpMethod = PathfinderFamilyPlanningUtil.getTranslatedMethodValue(fpMethodUsed, context);
-        Date lastVisitDate = null;
+
+        Date lastVisitDate;
         Visit lastVisit;
-        Date fpDate = PathfinderFamilyPlanningUtil.parseFpStartDate(fp_date);
-        lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD, fpMethodUsed);
+
+        Date fpDate = null;
+        try {
+            fpDate = PathfinderFamilyPlanningUtil.parseFpStartDate(fp_date);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
+        lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT, fpMethod);
         if (lastVisit == null) {
-            lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_REGISTRATION, fpMethodUsed);
+            lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD, fpMethod);
+        }
+
+        if (lastVisit == null) {
+            lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId());
         }
         lastVisitDate = lastVisit.getDate();
         PathfinderFpAlertRule alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, fp_pillCycles, fpMethod);
