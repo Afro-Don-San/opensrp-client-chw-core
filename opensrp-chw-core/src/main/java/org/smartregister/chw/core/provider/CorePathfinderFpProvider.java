@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
+import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.provider.BasePathfinderFpRegisterProvider;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
 import com.google.gson.Gson;
@@ -118,6 +119,7 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
         private Integer pillCycles;
         private String dayFp;
         private String fpMethod;
+        private PathfinderFpMemberObject pathfinderFpMemberObject;
 
         private UpdateAsyncTask(Context context, RegisterViewHolder viewHolder, CommonPersonObjectClient pc) {
             this.context = context;
@@ -131,22 +133,22 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
             dayFp = Utils.getValue(pc.getColumnmaps(), PathfinderFamilyPlanningConstants.DBConstants.FP_FP_START_DATE, true);
             fpMethod = Utils.getValue(pc.getColumnmaps(), PathfinderFamilyPlanningConstants.DBConstants.FP_METHOD_ACCEPTED, false);
             pillCycles = PathfinderFpDao.getLastPillCycle(baseEntityID, fpMethod);
-
+            pathfinderFpMemberObject = PathfinderFpDao.getMember(baseEntityID);
             lastVisit = PathfinderFpDao.getLatestFpVisit(baseEntityID, PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT, fpMethod);
 
             if (lastVisit == null) {
                 lastVisit = PathfinderFpDao.getLatestFpVisit(baseEntityID, PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD, fpMethod);
             }
 
-            if (lastVisit == null) {
-                lastVisit = PathfinderFpDao.getLatestFpVisit(baseEntityID);
+            if (lastVisit == null && pathfinderFpMemberObject.isClientAlreadyUsingFp()) {//for clients already using family planning method
+                lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_REGISTRATION, pathfinderFpMemberObject.getFpMethod());
             }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void param) {
-            Timber.e("Coze :: CorePathfinderFpProvider " + new Gson().toJson(lastVisit));
             Date fpDate = null;
             try {
                 fpDate = new Date(Long.parseLong(dayFp));
@@ -159,9 +161,6 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
 
                 Rules rule = PathfinderFamilyPlanningUtil.getFpRules(fpMethod);
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, pillCycles, fpMethod);
-
-
-                Timber.e("Coze :: fpAlertRule " + new Gson().toJson(fpAlertRule));
 
                 if (fpAlertRule != null
                         && StringUtils.isNotBlank(fpAlertRule.getVisitID())
