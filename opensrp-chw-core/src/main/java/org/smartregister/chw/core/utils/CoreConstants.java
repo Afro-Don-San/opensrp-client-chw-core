@@ -153,6 +153,7 @@ public class CoreConstants {
         public static final String MALARIA_FOLLOW_UP_HF = "Malaria Follow-up HF";
         public static final String FAMILY_PLANNING_UPDATE = "Family Planning Update";
         public static final String FP_METHOD_REFERRAL = "FP Method Referral";
+        public static final String PREGNANCY_TEST_REFERRAL = "Pregnancy Test Referral";
     }
 
     public static final class EncounterType {
@@ -765,6 +766,7 @@ public class CoreConstants {
         public static final String FP_COC_POP_REFILL = "fp-coc-pop-refill-rule.yml";
         public static final String PATHFINDER_FP_COC_POP_REFILL = "pathfinder-fp-coc-pop-refill-rule.yml";
         public static final String PATHFINDER_PREGNANT_WOMAN_FP_FOLLOWUP = "pathfinder-pregnant-woman-followup-rule.yml";
+        public static final String PATHFINDER_PREGNANCY_SCREENING_FOLLOWUP = "pathfinder-pregnancy-screening-followup-rule.yml";
         public static final String FP_CONDOM_REFILL = "fp-condom-refill-rule.yml";
         public static final String PATHFINDER_FP_CONDOM_REFILL = "pathfinder-fp-condom-refill-rule.yml";
         public static final String FP_INJECTION_DUE = "fp-injection-due-rule.yml";

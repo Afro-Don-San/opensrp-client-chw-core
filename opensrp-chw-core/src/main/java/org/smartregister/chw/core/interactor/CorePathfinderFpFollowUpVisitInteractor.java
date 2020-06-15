@@ -58,7 +58,7 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
 
 
             NCUtils.processEvent(baseEvent.getBaseEntityId(), new JSONObject(org.smartregister.chw.anc.util.JsonFormUtils.gson.toJson(baseEvent)));
-            if (baseEvent.getEventType().equals(CoreConstants.EventType.ANC_REFERRAL) || baseEvent.getEventType().equals(CoreConstants.EventType.FP_METHOD_REFERRAL)) {
+            if (baseEvent.getEventType().equals(CoreConstants.EventType.ANC_REFERRAL) || baseEvent.getEventType().equals(CoreConstants.EventType.FP_METHOD_REFERRAL)|| baseEvent.getEventType().equals(CoreConstants.EventType.PREGNANCY_TEST_REFERRAL)) {
                 String facilityLocationId = null;
                 for (Obs ob : baseEvent.getObs()) {
                     if (ob.getFieldCode().equals("chw_referral_hf")) {

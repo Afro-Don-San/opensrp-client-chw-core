@@ -97,6 +97,17 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
             if(baseUpcomingService!=null)
                 serviceList.add(baseUpcomingService);
         }
+
+        if(pathfinderFpAlertObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT) && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)){
+            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules(), lastVisitDate,  FpUtil.parseFpStartDate(pathfinderFpAlertObject.getFpPregnancyScreeningDate()), fp_pillCycles, fpMethod);
+            serviceDueDate = alertRule.getDueDate();
+            serviceOverDueDate = alertRule.getOverDueDate();
+            serviceName = context.getString(R.string.pregnancy_screening_followup);
+
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName,serviceDueDate,serviceOverDueDate);
+            if(baseUpcomingService!=null)
+                serviceList.add(baseUpcomingService);
+        }
     }
 
     private BaseUpcomingService generateUpcomingService(String serviceName,Date serviceDueDate,Date serviceOverDueDate ){
