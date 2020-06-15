@@ -193,12 +193,14 @@ public class CoreConstants {
         private static final String HIV_REFERRAL_FORM = "referrals/hiv_referral_form";
         private static final String TB_REFERRAL_FORM = "referrals/tb_referral_form";
         private static final String GBV_REFERRAL_FORM = "referrals/gbv_referral_form";
+        private static final String FEMALE_FAMILY_PLANNING_UNIFIED_REFERRAL_FORM = "referrals/female_fp_referral_form";
+        private static final String MALE_FAMILY_PLANNING_UNIFIED_REFERRAL_FORM = "referrals/male_fp_referral_form";
         private static final String CHILD_GBV_REFERRAL_FORM = "referrals/child_gbv_referral_form";
         private static final String REFERRAL_FOLLOWUP_FORM = "referrals/referral_followup_neat_form";
         private static final String ROUTINE_HOUSEHOLD_VISIT = "routine_household_visit";
         private static final String FEMALE_FAMILY_PLANNING_REFERRAL_FORM = "female_fp_referral_form";
         private static final String MALE_FAMILY_PLANNING_REFERRAL_FORM = "male_fp_referral_form";
-        private static final String MALARIA_REFERRAL_FORM = "malaria_referral_form";
+        private static final String MALARIA_REFERRAL_FORM = "referrals/malaria_referral_form";
         private static final String ANC_DANGER_SIGNS_OUTCOME_FORM = "anc_danger_signs_outcome";
         private static final String FEMALE_FAMILY_PLANNING_REGISTRATION_FORM = "female_family_planning_registration";
         private static final String MALE_FAMILY_PLANNING_REGISTRATION_FORM = "male_family_planning_registration";
@@ -217,6 +219,7 @@ public class CoreConstants {
         public static final String PATHFINDER_ANC_REFERRAL = "pathfinder_anc_referral";
         public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL = "pathfinder_pregnancy_test_referral";
         public static final String PATHFINDER_FP_METHOD_REFERRAL = "pathfinder_fp_method_referral";
+
 
         public static AssetManager assetManager;
         public static Locale locale;
@@ -263,6 +266,10 @@ public class CoreConstants {
 
         public static String getFamilyPlanningReferralForm(String gender) {
             return gender.equalsIgnoreCase(Gender.MALE.toString()) ? MALE_FAMILY_PLANNING_REFERRAL_FORM : FEMALE_FAMILY_PLANNING_REFERRAL_FORM;
+        }
+
+        public static String getFamilyPlanningUnifiedReferralForm(String gender) {
+            return gender.equalsIgnoreCase(Gender.MALE.toString()) ? MALE_FAMILY_PLANNING_UNIFIED_REFERRAL_FORM : FEMALE_FAMILY_PLANNING_UNIFIED_REFERRAL_FORM;
         }
 
         public static String getMalariaReferralForm() {
@@ -966,7 +973,7 @@ public class CoreConstants {
         public static final String SICK_CHILD = "Sick Child";
         public static final String ANC_DANGER_SIGNS = "ANC Danger Signs";
         public static final String PNC_DANGER_SIGNS = "PNC Danger Signs";
-        public static final String FP_SIDE_EFFECTS = "Family planning side effects";
+        public static final String FP_SIDE_EFFECTS = "FP Initiation";
         public static final String SUSPECTED_MALARIA = "Suspected Malaria";
         public static final String SUSPECTED_HIV= "Suspected HIV";
         public static final String SUSPECTED_TB= "Suspected TB";
