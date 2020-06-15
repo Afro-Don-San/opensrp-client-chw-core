@@ -214,6 +214,7 @@ public class CoreConstants {
         public static final String PATHFINDER_GIVE_FAMILY_PLANNING_METHOD = "pathfinder_give_family_planning_method";
         public static final String PATHFINDER_RISK_ASSESSMENT_HIV_TESTING_DUAL_PROTECTION_COUNSELING = "pathfinder_risk_assessment_hiv_testing_dual_protection_counseling";
         public static final String PATHFINDER_ANC_REFERRAL = "pathfinder_anc_referral";
+        public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL = "pathfinder_pregnancy_test_referral";
         public static final String PATHFINDER_FP_METHOD_REFERRAL = "pathfinder_fp_method_referral";
 
         public static AssetManager assetManager;
@@ -400,6 +401,10 @@ public class CoreConstants {
 
         public static String getPathfinderFpMethodReferral() {
             return PATHFINDER_FP_METHOD_REFERRAL;
+        }
+
+        public static String getPathfinderPregnancyTestReferral() {
+            return PATHFINDER_PREGNANCY_TEST_REFERRAL;
         }
 
         public static String getReferralFollowupForm() {
@@ -759,6 +764,7 @@ public class CoreConstants {
         public static final String MALARIA_FOLLOW_UP_VISIT = "malaria-followup-rules.yml";
         public static final String FP_COC_POP_REFILL = "fp-coc-pop-refill-rule.yml";
         public static final String PATHFINDER_FP_COC_POP_REFILL = "pathfinder-fp-coc-pop-refill-rule.yml";
+        public static final String PATHFINDER_PREGNANT_WOMAN_FP_FOLLOWUP = "pathfinder-pregnant-woman-followup-rule.yml";
         public static final String FP_CONDOM_REFILL = "fp-condom-refill-rule.yml";
         public static final String PATHFINDER_FP_CONDOM_REFILL = "pathfinder-fp-condom-refill-rule.yml";
         public static final String FP_INJECTION_DUE = "fp-injection-due-rule.yml";

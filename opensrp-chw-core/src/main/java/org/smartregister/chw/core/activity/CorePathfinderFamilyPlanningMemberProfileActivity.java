@@ -20,6 +20,7 @@ import com.adosa.opensrp.chw.fp.activity.BasePathfinderFpProfileActivity;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jeasy.rules.api.Rules;
@@ -347,6 +348,18 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 break;
         }
     }
+    private void updatePregnacyScreeningButton(String buttonStatus) {
+        switch (buttonStatus) {
+            case CoreConstants.VISIT_STATE.DUE:
+                setPregnancyScreeningButtonDue();
+                break;
+            case CoreConstants.VISIT_STATE.OVERDUE:
+                setPregnancyScreeningButtonOverdue();
+                break;
+            default:
+                break;
+        }
+    }
 
     public void updateFollowUpVisitStatusRow(Visit lastVisit) {
         setupFollowupVisitEditViews(VisitUtils.isVisitWithin24Hours(lastVisit));
@@ -383,13 +396,23 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 Integer pillCycles = PathfinderFpDao.getLastPillCycle(pathfinderFpMemberObject.getBaseEntityId(), pathfinderFpMemberObject.getFpMethod());
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), pillCycles, pathfinderFpMemberObject.getFpMethod());
             }
+            else if(!pathfinderFpMemberObject.getEdd().equals("") && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)){
+                Date lastVisitDate;
+                if (lastVisit == null) {
+                    lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
+                }
+                lastVisitDate = lastVisit.getDate();
+                Rules rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
+                fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd()), 0, pathfinderFpMemberObject.getPregnancyStatus());
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void param) {
+            Timber.e("Coze :: fpAlertRule = "+new Gson().toJson(fpAlertRule));
             if (fpAlertRule != null && (fpAlertRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.OVERDUE) ||
-                    fpAlertRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.DUE))
+                    fpAlertRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.DUE) && !pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT))
             ) {
                 updateFollowUpVisitButton(fpAlertRule.getButtonStatus());
             }
@@ -402,6 +425,9 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 } else if (pathfinderFpMemberObject.isIntroductionToFamilyPlanningDone()) {
                     if (pathfinderFpMemberObject.getPregnancyStatus().isEmpty())
                         showFpPregnancyScreeningButton();
+                    else if(pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)){
+                        updatePregnacyScreeningButton(fpAlertRule.getButtonStatus());
+                    }
                 } else {
                     showIntroductionToFpButton();
                 }

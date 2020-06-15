@@ -64,6 +64,13 @@ public class PathfinderFpAlertRule implements ICommonRule {
         return true;
     }
 
+    public boolean isPregnantWomanFollowupValid(int dueDay, int overdueDate, int expiry) {
+        this.dueDate = new DateTime(fpDate).plusDays(dueDay);
+        this.overDueDate = new DateTime(fpDate).plusDays(overdueDate);
+        this.expiryDate = new DateTime(fpDate).plusDays(expiry);
+        return true;
+    }
+
     public boolean isInjectionValid(int dueDay, int overdueDate) {
         if (lastVisitDate != null) {
             this.dueDate = new DateTime(lastVisitDate).plusDays(dueDay);

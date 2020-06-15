@@ -5,6 +5,7 @@ import android.content.Context;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
+import com.google.gson.Gson;
 
 import org.jeasy.rules.api.Rules;
 import org.smartregister.chw.anc.domain.MemberObject;
@@ -13,6 +14,7 @@ import org.smartregister.chw.anc.interactor.BaseAncUpcomingServicesInteractor;
 import org.smartregister.chw.anc.model.BaseUpcomingService;
 import org.smartregister.chw.core.R;
 import org.smartregister.chw.core.rule.PathfinderFpAlertRule;
+import org.smartregister.chw.core.utils.FpUtil;
 import org.smartregister.chw.core.utils.PathfinderFamilyPlanningUtil;
 
 import java.text.MessageFormat;
@@ -79,16 +81,33 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
             serviceName = MessageFormat.format(context.getString(R.string.refill), fpMethod);
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName,serviceDueDate,serviceOverDueDate);
+            if(baseUpcomingService!=null)
+                serviceList.add(baseUpcomingService);
         }
 
+        if(!pathfinderFpAlertObject.getEdd().isEmpty() && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)){
+            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantWomenFpRules(), lastVisitDate,  FpUtil.parseFpStartDate(pathfinderFpAlertObject.getEdd()), fp_pillCycles, fpMethod);
+
+            serviceDueDate = alertRule.getDueDate();
+            serviceOverDueDate = alertRule.getOverDueDate();
+            serviceName = context.getString(R.string.pregnant_client_followup);
+
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName,serviceDueDate,serviceOverDueDate);
+            if(baseUpcomingService!=null)
+                serviceList.add(baseUpcomingService);
+        }
+    }
+
+    private BaseUpcomingService generateUpcomingService(String serviceName,Date serviceDueDate,Date serviceOverDueDate ){
         BaseUpcomingService upcomingService = new BaseUpcomingService();
         if (serviceName != null) {
             upcomingService.setServiceDate(serviceDueDate);
             upcomingService.setOverDueDate(serviceOverDueDate);
             upcomingService.setServiceName(serviceName);
-            serviceList.add(upcomingService);
+            return upcomingService;
         }
-
+        return null;
     }
 
 }

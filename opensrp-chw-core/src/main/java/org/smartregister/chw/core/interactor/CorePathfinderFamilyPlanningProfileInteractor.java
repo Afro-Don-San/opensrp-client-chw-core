@@ -6,6 +6,7 @@ import com.adosa.opensrp.chw.fp.contract.BaseFpProfileContract;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.interactor.BasePathfinderFpProfileInteractor;
+import com.google.gson.Gson;
 
 import org.joda.time.LocalDate;
 import org.smartregister.chw.anc.domain.MemberObject;
@@ -42,6 +43,7 @@ public class CorePathfinderFamilyPlanningProfileInteractor extends BasePathfinde
 
     @Override
     public void updateProfileFpStatusInfo(PathfinderFpMemberObject memberObject, BaseFpProfileContract.InteractorCallback callback) {
+        Timber.e("Coze :: updateProfileFpStatusInfo = ");
         Runnable runnable = new Runnable() {
             Date lastVisitDate = getLastVisitDate(memberObject);
             AlertStatus familyAlert = AlertDao.getFamilyAlertStatus(memberObject.getFamilyBaseEntityId());
@@ -112,6 +114,7 @@ public class CorePathfinderFamilyPlanningProfileInteractor extends BasePathfinde
     protected Alert getAlerts(Context context, String baseEntityID) {
         try {
             List<BaseUpcomingService> baseUpcomingServices = new ArrayList<>(new CorePathfinderFamilyPlanningUpcomingServicesInteractor().getMemberServices(context, toMember(PathfinderFpDao.getMember(baseEntityID))));
+            Timber.e("Coze :: serviceList = "+new Gson().toJson(baseUpcomingServices));
             if (baseUpcomingServices.size() > 0) {
                 Comparator<BaseUpcomingService> comparator = (o1, o2) -> o1.getServiceDate().compareTo(o2.getServiceDate());
                 Collections.sort(baseUpcomingServices, comparator);
@@ -121,6 +124,9 @@ public class CorePathfinderFamilyPlanningProfileInteractor extends BasePathfinde
                 String serviceName = baseUpcomingService.getServiceName();
                 AlertStatus upcomingServiceAlertStatus = serviceDate != null && serviceDate.before(new Date()) ? AlertStatus.urgent : AlertStatus.normal;
                 String formattedServiceDate = serviceDate != null ? AbstractDao.getDobDateFormat().format(serviceDate) : null;
+                Timber.e("Coze :: upcomingServiceAlertStatus = "+new Gson().toJson(upcomingServiceAlertStatus));
+                Timber.e("Coze :: formattedServiceDate = "+new Gson().toJson(formattedServiceDate));
+                Timber.e("Coze :: serviceName = "+serviceName);
                 return new Alert(baseEntityID, serviceName, serviceName, upcomingServiceAlertStatus, formattedServiceDate, "", true);
             }
         } catch (Exception e) {

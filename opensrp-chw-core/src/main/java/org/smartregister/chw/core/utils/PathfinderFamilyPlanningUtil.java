@@ -37,6 +37,11 @@ public class PathfinderFamilyPlanningUtil extends com.adosa.opensrp.chw.fp.util.
         return fpRule;
     }
 
+    public static Rules getPregnantWomenFpRules() {
+        Rules fpRule = CoreChwApplication.getInstance().getRulesEngineHelper().rules(CoreConstants.RULE_FILE.PATHFINDER_PREGNANT_WOMAN_FP_FOLLOWUP);
+        return fpRule;
+    }
+
     public static Date parseFpStartDate(String startDate) {
         try {
             return sdf.parse(startDate);
