@@ -41,6 +41,12 @@ public class CorePathfinderFamilyPlanningRegisterActivity extends BasePathfinder
 
             if (FORM_NAME.equals(CoreConstants.JSON_FORM.getPathfinderFamilyPlanningIntroduction()))
                 form.setName(this.getString(R.string.introduction_to_fp));
+            else if(FORM_NAME.equals(CoreConstants.JSON_FORM.getPathfinderPregnancyScreening()))
+                form.setName(this.getString(R.string.fp_pregnancy_screening));
+            else if(FORM_NAME.equals(CoreConstants.JSON_FORM.getPathfinderChooseFamilyPlanningMethod()))
+                form.setName(this.getString(R.string.choose_fp_method));
+            else if(FORM_NAME.equals(CoreConstants.JSON_FORM.getPathfinderGiveFamilyPlanningMethod()))
+                form.setName(this.getString(R.string.give_fp_method));
             else
                 form.setName(this.getString(org.smartregister.chw.core.R.string.fp_registration));
             form.setNextLabel(this.getResources().getString(org.smartregister.chw.core.R.string.next));

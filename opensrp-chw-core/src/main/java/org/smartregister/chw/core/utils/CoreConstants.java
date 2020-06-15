@@ -211,6 +211,8 @@ public class CoreConstants {
         public static final String PATHFINDER_PREGNANCY_SCREENING = "pathfinder_pregnancy_screening";
         public static final String PATHFINDER_CHOOSE_FAMILY_PLANNING_METHOD = "pathfinder_family_planning_method_choice";
         public static final String PATHFINDER_GIVE_FAMILY_PLANNING_METHOD = "pathfinder_give_family_planning_method";
+        public static final String PATHFINDER_RISK_ASSESSMENT_HIV_TESTING_DUAL_PROTECTION_COUNSELING = "pathfinder_risk_assessment_hiv_testing_dual_protection_counseling";
+        public static final String PATHFINDER_ANC_REFERRAL = "pathfinder_anc_referral";
 
         public static AssetManager assetManager;
         public static Locale locale;
@@ -384,6 +386,14 @@ public class CoreConstants {
 
         public static String getPathfinderGiveFamilyPlanningMethod() {
             return PATHFINDER_GIVE_FAMILY_PLANNING_METHOD;
+        }
+
+        public static String getPathfinderRiskAssessmentHivTestingDualProtectionCounseling() {
+            return PATHFINDER_RISK_ASSESSMENT_HIV_TESTING_DUAL_PROTECTION_COUNSELING;
+        }
+
+        public static String getPathfinderAncReferral() {
+            return PATHFINDER_ANC_REFERRAL;
         }
 
         public static String getReferralFollowupForm() {

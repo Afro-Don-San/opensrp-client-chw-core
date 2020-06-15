@@ -3,6 +3,8 @@ package org.smartregister.chw.core.sync;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
+
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.chw.anc.util.DBConstants;
 import org.smartregister.chw.anc.util.NCUtils;
@@ -207,6 +209,7 @@ public class CoreClientProcessor extends ClientProcessorForJava {
             case CoreConstants.EventType.PNC_HOME_VISIT_NOT_DONE:
             case FamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT:
             case FamilyPlanningConstants.EventType.FAMILY_PLANNING_REGISTRATION:
+            case PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD:
                 if (eventClient.getEvent() == null) {
                     return;
                 }
