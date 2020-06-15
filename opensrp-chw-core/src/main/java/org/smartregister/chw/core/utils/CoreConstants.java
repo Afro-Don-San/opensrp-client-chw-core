@@ -152,6 +152,7 @@ public class CoreConstants {
         public static final String PNC_DANGER_SIGNS_OUTCOME = "PNC Danger Signs Outcome";
         public static final String MALARIA_FOLLOW_UP_HF = "Malaria Follow-up HF";
         public static final String FAMILY_PLANNING_UPDATE = "Family Planning Update";
+        public static final String FP_METHOD_REFERRAL = "FP Method Referral";
     }
 
     public static final class EncounterType {
@@ -213,6 +214,7 @@ public class CoreConstants {
         public static final String PATHFINDER_GIVE_FAMILY_PLANNING_METHOD = "pathfinder_give_family_planning_method";
         public static final String PATHFINDER_RISK_ASSESSMENT_HIV_TESTING_DUAL_PROTECTION_COUNSELING = "pathfinder_risk_assessment_hiv_testing_dual_protection_counseling";
         public static final String PATHFINDER_ANC_REFERRAL = "pathfinder_anc_referral";
+        public static final String PATHFINDER_FP_METHOD_REFERRAL = "pathfinder_fp_method_referral";
 
         public static AssetManager assetManager;
         public static Locale locale;
@@ -394,6 +396,10 @@ public class CoreConstants {
 
         public static String getPathfinderAncReferral() {
             return PATHFINDER_ANC_REFERRAL;
+        }
+
+        public static String getPathfinderFpMethodReferral() {
+            return PATHFINDER_FP_METHOD_REFERRAL;
         }
 
         public static String getReferralFollowupForm() {

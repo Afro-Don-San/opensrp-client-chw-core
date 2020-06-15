@@ -196,14 +196,6 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CoreConstants.ProfileActivityResults.CHANGE_COMPLETED:
-                if (resultCode == Activity.RESULT_OK) {
-                    Intent intent = new Intent(this, CorePathfinderFamilyPlanningRegisterActivity.class);
-                    intent.putExtras(getIntent().getExtras());
-                    startActivity(intent);
-                    finish();
-                }
-                break;
             case JsonFormUtils.REQUEST_CODE_GET_JSON:
                 if (resultCode == RESULT_OK) {
                     try {
@@ -408,7 +400,8 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 } else if (pathfinderFpMemberObject.isPregnancyScreeningDone() && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_LIKELY_PREGNANT)) {
                     showChooseFpMethodButton();
                 } else if (pathfinderFpMemberObject.isIntroductionToFamilyPlanningDone()) {
-                    showFpPregnancyScreeningButton();
+                    if (pathfinderFpMemberObject.getPregnancyStatus().isEmpty())
+                        showFpPregnancyScreeningButton();
                 } else {
                     showIntroductionToFpButton();
                 }

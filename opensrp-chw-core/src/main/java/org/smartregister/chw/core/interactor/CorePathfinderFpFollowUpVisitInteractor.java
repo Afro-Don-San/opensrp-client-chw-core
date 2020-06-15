@@ -1,5 +1,7 @@
 package org.smartregister.chw.core.interactor;
 
+import android.content.Context;
+
 import androidx.annotation.Nullable;
 
 import com.adosa.opensrp.chw.fp.interactor.BasePathfinderFpFollowUpVisitInteractor;
@@ -9,10 +11,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.chw.anc.AncLibrary;
+import org.smartregister.chw.anc.contract.BaseAncHomeVisitContract;
+import org.smartregister.chw.anc.domain.MemberObject;
 import org.smartregister.chw.anc.domain.Visit;
+import org.smartregister.chw.anc.model.BaseAncHomeVisitAction;
 import org.smartregister.chw.anc.util.JsonFormUtils;
 import org.smartregister.chw.anc.util.NCUtils;
 import org.smartregister.chw.core.application.CoreChwApplication;
+import org.smartregister.chw.core.dao.PNCDao;
 import org.smartregister.chw.core.utils.CoreConstants;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.clientandeventmodel.Obs;
@@ -20,6 +26,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,18 +58,14 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
 
 
             NCUtils.processEvent(baseEvent.getBaseEntityId(), new JSONObject(org.smartregister.chw.anc.util.JsonFormUtils.gson.toJson(baseEvent)));
-            if (baseEvent.getEventType().equals(CoreConstants.EventType.ANC_REFERRAL)) {
+            if (baseEvent.getEventType().equals(CoreConstants.EventType.ANC_REFERRAL) || baseEvent.getEventType().equals(CoreConstants.EventType.FP_METHOD_REFERRAL)) {
                 String facilityLocationId = null;
                 for (Obs ob : baseEvent.getObs()) {
-                    if (ob.getFieldCode().equals("referral_facility")) {
-                        if (!ob.getHumanReadableValues().isEmpty())
-                            facilityLocationId = ob.getHumanReadableValues().get(0).toString();
-                        else
-                            facilityLocationId = ob.getValues().get(0).toString();
+                    if (ob.getFieldCode().equals("chw_referral_hf")) {
+                        facilityLocationId = ob.getValues().get(0).toString();
                         break;
                     }
                 }
-
 
                 createReferralTask(baseEvent.getBaseEntityId(), allSharedPreferences, CoreConstants.TASKS_FOCUS.ANC_DANGER_SIGNS, "", baseEvent.getFormSubmissionId(), facilityLocationId);
             }
@@ -109,5 +112,17 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
         CoreChwApplication.getInstance().getTaskRepository().addOrUpdate(task);
     }
 
+
+    @Override
+    public MemberObject getMemberClient(String memberID) {
+        // read all the member details from the database
+        return PNCDao.getMember(memberID);
+    }
+
+    public interface Flavor {
+        void setContext(Context context);
+
+        LinkedHashMap<String, BaseAncHomeVisitAction> calculateActions(final BaseAncHomeVisitContract.View view, MemberObject memberObject, final BaseAncHomeVisitContract.InteractorCallBack callBack) throws BaseAncHomeVisitAction.ValidationException;
+    }
 
 }
