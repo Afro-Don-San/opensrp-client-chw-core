@@ -163,16 +163,20 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
             if (lastVisit != null) {
                 lastVisitDate = lastVisit.getDate();
 
-                Timber.e("Coze :: onPostExecute alertRule ");
-
                 if(!pathfinderFpMemberObject.getEdd().isEmpty() && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)){
                     Rules rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
                     fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd()), 0, pathfinderFpMemberObject.getFpMethod());
                 }else if(pathfinderFpMemberObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT) && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)){
                     Rules rule = PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules();
                     fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpPregnancyScreeningDate()), 0, pathfinderFpMemberObject.getFpMethod());
-                    Timber.e("Coze :: new alertRule = "+new Gson().toJson(fpAlertRule));
-                }else {
+                }else if ((pathfinderFpMemberObject.getFpMethod().equals("sdm") && pathfinderFpMemberObject.getPeriodsRegularity().equals("IRREGULAR")) || pathfinderFpMemberObject.isManRequestedMethodForPartner()){
+                    Rules rule;
+                    if (pathfinderFpMemberObject.isManRequestedMethodForPartner())
+                        rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
+                    else
+                        rule = PathfinderFamilyPlanningUtil.getSdmMethodChoiceFollowupRules();
+                    fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpMethodChoiceDate()), 0, pathfinderFpMemberObject.getFpMethod());
+                }else if(!pathfinderFpMemberObject.getFpStartDate().isEmpty()) {
                     Rules rule = PathfinderFamilyPlanningUtil.getFpRules(fpMethod);
                     fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, pillCycles, fpMethod);
                 }

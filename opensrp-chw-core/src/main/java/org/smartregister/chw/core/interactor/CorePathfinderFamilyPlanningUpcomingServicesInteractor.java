@@ -5,7 +5,6 @@ import android.content.Context;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
-import com.google.gson.Gson;
 
 import org.jeasy.rules.api.Rules;
 import org.smartregister.chw.anc.domain.MemberObject;
@@ -76,41 +75,60 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         }
         lastVisitDate = lastVisit.getDate();
         PathfinderFpAlertRule alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, fp_pillCycles, fpMethod);
-        if (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_COC) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_POP) ||
-                fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_MALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_SDM)) {
+        if (!pathfinderFpAlertObject.getFpStartDate().equals("") && (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_COC) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_POP) ||
+                fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_MALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_SDM))) {
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
             serviceName = MessageFormat.format(context.getString(R.string.refill), fpMethod);
-            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName,serviceDueDate,serviceOverDueDate);
-            if(baseUpcomingService!=null)
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
+            if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
         }
 
-        if(!pathfinderFpAlertObject.getEdd().isEmpty() && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)){
-            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantWomenFpRules(), lastVisitDate,  FpUtil.parseFpStartDate(pathfinderFpAlertObject.getEdd()), fp_pillCycles, fpMethod);
+        if (!pathfinderFpAlertObject.getEdd().isEmpty() && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
+            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantWomenFpRules(), lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpAlertObject.getEdd()), fp_pillCycles, fpMethod);
 
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
             serviceName = context.getString(R.string.pregnant_client_followup);
 
-            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName,serviceDueDate,serviceOverDueDate);
-            if(baseUpcomingService!=null)
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
+            if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
         }
 
-        if(pathfinderFpAlertObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT) && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)){
-            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules(), lastVisitDate,  FpUtil.parseFpStartDate(pathfinderFpAlertObject.getFpPregnancyScreeningDate()), fp_pillCycles, fpMethod);
+        if (pathfinderFpAlertObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT) && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
+            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules(), lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpAlertObject.getFpPregnancyScreeningDate()), fp_pillCycles, fpMethod);
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
             serviceName = context.getString(R.string.pregnancy_screening_followup);
 
-            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName,serviceDueDate,serviceOverDueDate);
-            if(baseUpcomingService!=null)
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
+            if (baseUpcomingService != null)
+                serviceList.add(baseUpcomingService);
+        }
+
+        if ((pathfinderFpAlertObject.getFpMethod().equals("sdm") && pathfinderFpAlertObject.getPeriodsRegularity().equals("IRREGULAR")) || pathfinderFpAlertObject.isManRequestedMethodForPartner()) {
+            if (pathfinderFpAlertObject.isManRequestedMethodForPartner()) {
+                rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
+                serviceName = context.getString(R.string.man_chose_fp_method_for_partner_followup);
+            } else {
+                rule = PathfinderFamilyPlanningUtil.getSdmMethodChoiceFollowupRules();
+                serviceName = context.getString(R.string.fp_method_choice_followup);
+            }
+
+            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpAlertObject.getFpMethodChoiceDate()), fp_pillCycles, fpMethod);
+            serviceDueDate = alertRule.getDueDate();
+            serviceOverDueDate = alertRule.getOverDueDate();
+
+
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
+            if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
         }
     }
 
-    private BaseUpcomingService generateUpcomingService(String serviceName,Date serviceDueDate,Date serviceOverDueDate ){
+    private BaseUpcomingService generateUpcomingService(String serviceName, Date serviceDueDate, Date serviceOverDueDate) {
         BaseUpcomingService upcomingService = new BaseUpcomingService();
         if (serviceName != null) {
             upcomingService.setServiceDate(serviceDueDate);
