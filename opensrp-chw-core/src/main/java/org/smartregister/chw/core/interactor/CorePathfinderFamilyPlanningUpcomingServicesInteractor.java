@@ -16,6 +16,7 @@ import org.smartregister.chw.core.rule.PathfinderFpAlertRule;
 import org.smartregister.chw.core.utils.FpUtil;
 import org.smartregister.chw.core.utils.PathfinderFamilyPlanningUtil;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,6 +66,14 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
             Timber.e(e);
         }
 
+        if (fpDate == null) {
+            try {
+                fpDate = new Date(new BigDecimal(fp_date).longValue());
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+        }
+
         lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT, fpMethod);
         if (lastVisit == null) {
             lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD, fpMethod);
@@ -75,8 +84,7 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         }
         lastVisitDate = lastVisit.getDate();
         PathfinderFpAlertRule alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, fp_pillCycles, fpMethod);
-        if (!pathfinderFpAlertObject.getFpStartDate().equals("") && (fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_COC) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_POP) ||
-                fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_MALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM) || fpMethodUsed.equalsIgnoreCase(PathfinderFamilyPlanningConstants.DBConstants.FP_SDM))) {
+        if (!pathfinderFpAlertObject.getFpStartDate().equals("") && !fpMethodUsed.isEmpty()) {
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
             serviceName = MessageFormat.format(context.getString(R.string.refill), fpMethod);

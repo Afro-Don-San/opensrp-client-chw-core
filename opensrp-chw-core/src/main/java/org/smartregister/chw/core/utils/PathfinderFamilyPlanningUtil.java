@@ -23,6 +23,12 @@ public class PathfinderFamilyPlanningUtil extends com.adosa.opensrp.chw.fp.util.
         Rules fpRule = new Rules();
 
         switch (fpMethod) {
+            case PathfinderFamilyPlanningConstants.DBConstants.FP_SDM:
+            case PathfinderFamilyPlanningConstants.DBConstants.FP_IMPLANTS:
+            case PathfinderFamilyPlanningConstants.DBConstants.FP_IUD:
+            case PathfinderFamilyPlanningConstants.DBConstants.FP_LAM:
+            case PathfinderFamilyPlanningConstants.DBConstants.FP_TUBAL_LIGATION:
+            case PathfinderFamilyPlanningConstants.DBConstants.FP_VASECTOMY:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_POP:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_COC:
                 fpRule = CoreChwApplication.getInstance().getRulesEngineHelper().rules(CoreConstants.RULE_FILE.PATHFINDER_FP_COC_POP_REFILL);
