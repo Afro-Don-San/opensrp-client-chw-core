@@ -39,28 +39,24 @@ public class PathfinderFpAlertRule implements ICommonRule {
 
     public boolean isCocPopValid(int dueDay, int overdueDate, int daysFromOverdueTillExpiry) {
         if (lastVisitDate != null) {
-            this.dueDate = (new DateTime(this.lastVisitDate)).plusDays(this.pillCycles * 28).minusDays(dueDay);
-            this.overDueDate = (new DateTime(this.lastVisitDate)).plusDays(this.pillCycles * 28).minusDays(overdueDate);
-            this.expiryDate = (new DateTime(this.lastVisitDate)).plusDays(this.pillCycles * 28).plusDays(daysFromOverdueTillExpiry);
+            this.dueDate = (new DateTime(this.lastVisitDate)).plusDays(dueDay);
+
         } else {
-            this.dueDate = (new DateTime(this.fpDate)).plusDays(this.pillCycles * 28).minusDays(dueDay);
-            this.overDueDate = (new DateTime(this.fpDate)).plusDays(this.pillCycles * 28).minusDays(overdueDate);
-            this.expiryDate = (new DateTime(this.fpDate)).plusDays(this.pillCycles * 28).plusDays(daysFromOverdueTillExpiry);
+            this.dueDate = (new DateTime(this.fpDate)).plusDays(dueDay);
         }
+        this.overDueDate = (new DateTime(this.dueDate)).plusDays(overdueDate);
+        this.expiryDate = (new DateTime(this.overDueDate)).plusDays(daysFromOverdueTillExpiry);
         return true;
     }
 
     public boolean isCondomValid(int dueDay, int overdueDate, int daysFromOverdueTillExpiry) {
         if (lastVisitDate != null) {
-            this.dueDate = (new DateTime(this.lastVisitDate)).plusDays(28).minusDays(dueDay);
-            this.overDueDate = (new DateTime(this.lastVisitDate)).plusDays(28).minusDays(overdueDate);
-            this.expiryDate = (new DateTime(this.lastVisitDate)).plusDays(28).plusDays(daysFromOverdueTillExpiry);
-
+            this.dueDate = (new DateTime(this.lastVisitDate)).plusDays(dueDay);
         } else {
-            this.dueDate = (new DateTime(this.fpDate)).plusDays(28).minusDays(dueDay);
-            this.overDueDate = (new DateTime(this.fpDate)).plusDays(28).minusDays(overdueDate);
-            this.expiryDate = (new DateTime(this.fpDate)).plusDays(28).plusDays(daysFromOverdueTillExpiry);
+            this.dueDate = (new DateTime(this.fpDate)).plusDays(dueDay);
         }
+        this.overDueDate = (new DateTime(this.dueDate)).plusDays(overdueDate);
+        this.expiryDate = (new DateTime(this.overDueDate)).plusDays(daysFromOverdueTillExpiry);
         return true;
     }
 

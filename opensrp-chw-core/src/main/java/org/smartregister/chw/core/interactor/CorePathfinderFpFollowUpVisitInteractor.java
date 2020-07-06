@@ -82,7 +82,7 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
             visit.setPreProcessedJson(new Gson().toJson(baseEvent));
             visit.setParentVisitID(getParentVisitEventID(visit, parentEventType));
 
-            visitRepository().addVisit(visit);
+//            visitRepository().addVisit(visit);
             return visit;
         }
         return null;

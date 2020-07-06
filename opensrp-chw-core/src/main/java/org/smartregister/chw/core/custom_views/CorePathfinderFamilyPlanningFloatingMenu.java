@@ -7,12 +7,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.adosa.opensrp.chw.fp.custom_views.BaseFpFloatingMenu;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.fragment.BasePathfinderFpCallDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.smartregister.chw.core.R;
 import org.smartregister.chw.core.listener.OnClickFloatingMenu;
 
 import static org.smartregister.chw.core.utils.Utils.redrawWithOption;
@@ -63,6 +65,7 @@ public class CorePathfinderFamilyPlanningFloatingMenu extends BaseFpFloatingMenu
         callLayout.setClickable(false);
 
         referLayout = findViewById(org.smartregister.chw.core.R.id.refer_to_facility_layout);
+        ((TextView) referLayout.findViewById(R.id.fab_text)).setText(this.getContext().getString(R.string.refer_client));
         referLayout.setOnClickListener(this);
         referLayout.setClickable(false);
 

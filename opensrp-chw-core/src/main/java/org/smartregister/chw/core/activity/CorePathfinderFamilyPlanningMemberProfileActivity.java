@@ -19,6 +19,7 @@ import com.adosa.opensrp.chw.fp.activity.BasePathfinderFpProfileActivity;
 import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jeasy.rules.api.Rules;
@@ -138,7 +139,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
         }
     }
 
-    private void checkPhoneNumberProvided() {
+    protected void checkPhoneNumberProvided() {
         boolean phoneNumberAvailable = (StringUtils.isNotBlank(pathfinderFpMemberObject.getPhoneNumber())
                 || StringUtils.isNotBlank(pathfinderFpMemberObject.getFamilyHeadPhoneNumber()));
 
@@ -360,6 +361,19 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
         }
     }
 
+    private void updatePregnancyTestFollowup(String buttonStatus) {
+        switch (buttonStatus) {
+            case CoreConstants.VISIT_STATE.DUE:
+                setPregnancyTestFollowupButtonDue();
+                break;
+            case CoreConstants.VISIT_STATE.OVERDUE:
+                setPregnancyTestFollowupButtonOverdue();
+                break;
+            default:
+                break;
+        }
+    }
+
     private void updateFpMethodChoiceButton(String buttonStatus) {
         switch (buttonStatus) {
             case CoreConstants.VISIT_STATE.DUE:
@@ -408,7 +422,6 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 Integer pillCycles = PathfinderFpDao.getLastPillCycle(pathfinderFpMemberObject.getBaseEntityId(), pathfinderFpMemberObject.getFpMethod());
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), pillCycles, pathfinderFpMemberObject.getFpMethod());
             } else if (!pathfinderFpMemberObject.getEdd().equals("") && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
-                Timber.e("Coze :: client is pregnant");
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
@@ -416,7 +429,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 lastVisitDate = lastVisit.getDate();
                 Rules rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd()), 0, pathfinderFpMemberObject.getPregnancyStatus());
-            } else if (pathfinderFpMemberObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT) && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
+            } else if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
@@ -462,14 +475,20 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                         showChooseFpMethodButton();
                     }
                 } else if (pathfinderFpMemberObject.isIntroductionToFamilyPlanningDone()) {
-                    if (pathfinderFpMemberObject.getPregnancyStatus().isEmpty())
+                    if (pathfinderFpMemberObject.getPregnancyStatus().isEmpty() || pathfinderFpMemberObject.getPregnancyStatus().equals("null"))
                         showFpPregnancyScreeningButton();
                     else if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT) || pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
-                        updatePregnacyScreeningButton(fpAlertRule.getButtonStatus());
+                        if (pathfinderFpMemberObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT))
+                            updatePregnacyScreeningButton(fpAlertRule.getButtonStatus());
+                        else
+                            updatePregnancyTestFollowup(fpAlertRule.getButtonStatus());
                     }
                 } else {
                     showIntroductionToFpButton();
                 }
+            }
+            if (pathfinderFpMemberObject.isGiveFpMethodDone() && !pathfinderFpMemberObject.isFpRiskAssessmentDone()) {
+                showRiskAssessmentButton();
             } else {
                 updateFollowUpVisitStatusRow(lastVisit);
             }

@@ -219,6 +219,12 @@ public class CoreConstants {
         public static final String PATHFINDER_ANC_REFERRAL = "pathfinder_anc_referral";
         public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL = "pathfinder_pregnancy_test_referral";
         public static final String PATHFINDER_FP_METHOD_REFERRAL = "pathfinder_fp_method_referral";
+        public static final String PATHFINDER_LOAN_UNIT_REFERRAL = "pathfinder_loan_unit_referral";
+        public static final String PATHFINDER_BEACH_MANAGEMENT_UNIT_REFERRAL = "pathfinder_beach_management_unit_referral";
+        public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL_FOLLOWUP = "pathfinder_pregnancy_test_referral_followup";
+        public static final String PATHFINDER_HIV_REFERRAL = "pathfinder_hiv_referral";
+        public static final String PATHFINDER_STI_REFERRAL = "pathfinder_sti_referral";
+        public static final String PATHFINDER_HTC_REFERRAL = "pathfinder_htc_referral";
 
 
         public static AssetManager assetManager;
@@ -413,6 +419,30 @@ public class CoreConstants {
 
         public static String getPathfinderPregnancyTestReferral() {
             return PATHFINDER_PREGNANCY_TEST_REFERRAL;
+        }
+
+        public static String getPathfinderLoanUnitReferral() {
+            return PATHFINDER_LOAN_UNIT_REFERRAL;
+        }
+
+        public static String getPathfinderBeachManagementUnitReferral() {
+            return PATHFINDER_BEACH_MANAGEMENT_UNIT_REFERRAL;
+        }
+
+        public static String getPathfinderPregnancyTestReferralFollowup() {
+            return PATHFINDER_PREGNANCY_TEST_REFERRAL_FOLLOWUP;
+        }
+
+        public static String getPathfinderHivReferral() {
+            return PATHFINDER_HIV_REFERRAL;
+        }
+
+        public static String getPathfinderStiReferral() {
+            return PATHFINDER_STI_REFERRAL;
+        }
+
+        public static String getPathfinderHtcReferral() {
+            return PATHFINDER_HTC_REFERRAL;
         }
 
         public static String getReferralFollowupForm() {
@@ -981,6 +1011,8 @@ public class CoreConstants {
         public static final String SUSPECTED_TB= "Suspected TB";
         public static final String SUSPECTED_GBV= "Suspected GBV";
         public static final String SUSPECTED_CHILD_GBV= "Suspected Child GBV";
+        public static final String LOAN_MANAGEMENT_UNIT = "Loan Management Unit";
+        public static final String BEACH_MANAGEMENT_UNIT = "Beach Management Unit";
     }
 
     public static final class REGISTER_TYPE {
