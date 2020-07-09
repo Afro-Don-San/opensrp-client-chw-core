@@ -487,7 +487,9 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                     showIntroductionToFpButton();
                 }
             }
-            if (pathfinderFpMemberObject.isGiveFpMethodDone() && !pathfinderFpMemberObject.isFpRiskAssessmentDone()) {
+            if (!pathfinderFpMemberObject.isFpCitizenReportCardDone() && pathfinderFpMemberObject.isFpFollowupDone()) {
+                showCitizenReportCardButton();
+            }else if (pathfinderFpMemberObject.isGiveFpMethodDone() && !pathfinderFpMemberObject.isFpRiskAssessmentDone()) {
                 showRiskAssessmentButton();
             } else {
                 updateFollowUpVisitStatusRow(lastVisit);

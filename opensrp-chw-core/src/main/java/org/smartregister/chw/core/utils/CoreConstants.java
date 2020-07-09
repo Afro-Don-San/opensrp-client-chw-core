@@ -225,6 +225,7 @@ public class CoreConstants {
         public static final String PATHFINDER_HIV_REFERRAL = "pathfinder_hiv_referral";
         public static final String PATHFINDER_STI_REFERRAL = "pathfinder_sti_referral";
         public static final String PATHFINDER_HTC_REFERRAL = "pathfinder_htc_referral";
+        public static final String PATHFINDER_CITIZEN_REPORT_CARD = "pathfinder_citizen_report_card";
 
 
         public static AssetManager assetManager;
@@ -443,6 +444,10 @@ public class CoreConstants {
 
         public static String getPathfinderHtcReferral() {
             return PATHFINDER_HTC_REFERRAL;
+        }
+
+        public static String getPathfinderCitizenReportCard() {
+            return PATHFINDER_CITIZEN_REPORT_CARD;
         }
 
         public static String getReferralFollowupForm() {
