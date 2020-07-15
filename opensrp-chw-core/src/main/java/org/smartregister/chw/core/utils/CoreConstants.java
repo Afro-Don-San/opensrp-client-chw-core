@@ -210,7 +210,7 @@ public class CoreConstants {
         private static final String MALARIA_FOLLOW_UP_HF_FORM = "malaria_follow_up_hf";
 
         public static final String PATHFINDER_FAMILY_PLANNING_REGISTRATION_FORM = "pathfinder_female_family_planning_registration";
-        public static final String PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM = "pathfinder_female_family_planning_change_method";
+        public static final String PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM = "pathfinder_family_planning_change_method";
         public static final String PATHFINDER_FAMILY_PLANNING_INTRODUCTION = "pathfinder_family_planning_introduction";
         public static final String PATHFINDER_PREGNANCY_SCREENING = "pathfinder_pregnancy_screening";
         public static final String PATHFINDER_CHOOSE_FAMILY_PLANNING_METHOD = "pathfinder_family_planning_method_choice";
@@ -226,6 +226,10 @@ public class CoreConstants {
         public static final String PATHFINDER_STI_REFERRAL = "pathfinder_sti_referral";
         public static final String PATHFINDER_HTC_REFERRAL = "pathfinder_htc_referral";
         public static final String PATHFINDER_CITIZEN_REPORT_CARD = "pathfinder_citizen_report_card";
+        public static final String PATHFINDER_FP_METHOD_COUNSELING_REFERRAL_FOLLOWUP = "pathfinder_fp_method_counseling_referral_followup";
+        public static final String PATHFINDER_FP_METHOD_REFERRAL_FOLLOWUP = "pathfinder_fp_method_referral_followup";
+        public static final String PATHFINDER_FP_METHOD_REFILL_REFERRAL = "pathfinder_fp_method_refill_referral";
+        public static final String PATHFINDER_FP_METHOD_REFILL_REFERRAL_FOLLOWUP = "pathfinder_fp_method_refill_referral_followup";
 
 
         public static AssetManager assetManager;
@@ -345,7 +349,7 @@ public class CoreConstants {
         }
 
         public static String getFpChangeMethodForm(String gender) {
-            String formName = gender.equalsIgnoreCase(Gender.MALE.toString()) ? MALE_FAMILY_PLANNING_CHANGE_METHOD_FORM : PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM;
+            String formName = gender.equalsIgnoreCase(Gender.MALE.toString()) ? MALE_FAMILY_PLANNING_CHANGE_METHOD_FORM : FEMALE_FAMILY_PLANNING_CHANGE_METHOD_FORM;
             return Utils.getLocalForm(formName, locale, assetManager);
         }
 
@@ -448,6 +452,22 @@ public class CoreConstants {
 
         public static String getPathfinderCitizenReportCard() {
             return PATHFINDER_CITIZEN_REPORT_CARD;
+        }
+
+        public static String getPathfinderFpMethodCounselingReferralFollowup() {
+            return PATHFINDER_FP_METHOD_COUNSELING_REFERRAL_FOLLOWUP;
+        }
+
+        public static String getPathfinderFpMethodReferralFollowup() {
+            return PATHFINDER_FP_METHOD_REFERRAL_FOLLOWUP;
+        }
+
+        public static String getPathfinderFpMethodRefillReferralFollowup() {
+            return PATHFINDER_FP_METHOD_REFILL_REFERRAL_FOLLOWUP;
+        }
+
+        public static String getPathfinderFpMethodRefillReferral() {
+            return PATHFINDER_FP_METHOD_REFILL_REFERRAL;
         }
 
         public static String getReferralFollowupForm() {
@@ -697,15 +717,15 @@ public class CoreConstants {
 
         public static class PathfinderFamilyPlanningFollowUpVisitUtils {
             private static final String FAMILY_PLANNING_FOLLOWUP_COUNSEL = "pathfinder_family_planning_followup_counsel";
-            private static final String FAMILY_PLANNING_FOLLOWUP_RESUPPLY = "pathfinder_family_planning_followup_resupply";
+            private static final String FAMILY_PLANNING_FOLLOWUP_REFILL = "pathfinder_family_planning_followup_refill";
             private static final String FAMILY_PLANNING_FOLLOWUP_SIDE_EFFECTS = "fp_followup_side_effects";
 
             public static String getFamilyPlanningFollowupCounsel() {
                 return Utils.getLocalForm(FAMILY_PLANNING_FOLLOWUP_COUNSEL, locale, assetManager);
             }
 
-            public static String getFamilyPlanningFollowupResupply() {
-                return Utils.getLocalForm(FAMILY_PLANNING_FOLLOWUP_RESUPPLY, locale, assetManager);
+            public static String getFamilyPlanningFollowupRefill() {
+                return Utils.getLocalForm(FAMILY_PLANNING_FOLLOWUP_REFILL, locale, assetManager);
             }
 
             public static String getFamilyPlanningFollowupSideEffects() {
@@ -808,7 +828,8 @@ public class CoreConstants {
         public static final String FP_COC_POP_REFILL = "fp-coc-pop-refill-rule.yml";
         public static final String PATHFINDER_FP_COC_POP_REFILL = "pathfinder-fp-coc-pop-refill-rule.yml";
         public static final String PATHFINDER_PREGNANT_WOMAN_FP_FOLLOWUP = "pathfinder-pregnant-woman-followup-rule.yml";
-        public static final String PATHFINDER_PREGNANCY_SCREENING_FOLLOWUP = "pathfinder-pregnancy-screening-followup-rule.yml";
+        public static final String PATHFINDER_PREGNANCY_SCREENING_AND_REFERRAL_FOLLOWUP = "pathfinder-pregnancy-screening-and-referral-followup-rule.yml";
+        public static final String PATHFINDER_REFERRAL_REFERRAL_FOLLOWUP = "pathfinder-referral-followup-rule.yml";
         public static final String PATHFINDER_SDM_FAMILY_PLANNING_METHOD_CHOICE_FOLLOWUP = "pathfinder-sdm-family-planning-method-choice-followup-rule.yml";
         public static final String PATHFINDER_MAN_CHOSE_PARTNER_FP_METHOD_FOLLOWUP = "pathfinder-man-chose-partner-family-planning-method-followup-rule.yml";
         public static final String FP_CONDOM_REFILL = "fp-condom-refill-rule.yml";

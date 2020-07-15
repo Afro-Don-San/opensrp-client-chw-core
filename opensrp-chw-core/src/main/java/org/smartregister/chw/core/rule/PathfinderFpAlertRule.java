@@ -74,6 +74,13 @@ public class PathfinderFpAlertRule implements ICommonRule {
         return true;
     }
 
+    public boolean isFollowupValid(int dueDay, int overdueDate, int expiry) {
+        this.dueDate = new DateTime(lastVisitDate).plusDays(dueDay);
+        this.overDueDate = new DateTime(lastVisitDate).plusDays(overdueDate);
+        this.expiryDate = new DateTime(lastVisitDate).plusDays(expiry);
+        return true;
+    }
+
     public boolean isFpChoiceSdmFollowupValid(int dueDay, int overdueDate, int expiry) {
         this.dueDate = new DateTime(fpDate).plusDays(dueDay);
         this.overDueDate = new DateTime(fpDate).plusDays(overdueDate);
