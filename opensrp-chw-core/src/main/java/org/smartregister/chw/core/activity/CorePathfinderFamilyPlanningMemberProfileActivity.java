@@ -164,6 +164,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
     @Override
     public void setupViews() {
         super.setupViews();
+        pathfinderFpMemberObject = PathfinderFpDao.getMember(pathfinderFpMemberObject.getBaseEntityId());
         new CorePathfinderFamilyPlanningMemberProfileActivity.UpdateFollowUpVisitButtonTask(pathfinderFpMemberObject).execute();
     }
 
@@ -267,7 +268,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
 
     private void refreshViewOnHomeVisitResult() {
         Observable<Visit> observable = Observable.create(visitObservableEmitter -> {
-            Visit lastVisit = PathfinderFpDao.getLatestVisit(pathfinderFpMemberObject.getBaseEntityId(), FP_FOLLOW_UP_VISIT);
+            Visit lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
             visitObservableEmitter.onNext(lastVisit);
             visitObservableEmitter.onComplete();
         });
@@ -283,7 +284,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
 
                     @Override
                     public void onNext(Visit visit) {
-                        updateLastVisitRow(visit.getDate());
+//                        updateLastVisitRow(visit.getDate());
                         onMemberDetailsReloaded(pathfinderFpMemberObject);
                     }
 
@@ -432,6 +433,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
 
         @Override
         protected Void doInBackground(Void... voids) {
+            Timber.e("Coze :: started on background");
             lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), FP_FOLLOW_UP_VISIT, pathfinderFpMemberObject.getFpMethod());
 
             if (!pathfinderFpMemberObject.getFpStartDate().equals("") && !pathfinderFpMemberObject.getFpStartDate().equals("0")) {
