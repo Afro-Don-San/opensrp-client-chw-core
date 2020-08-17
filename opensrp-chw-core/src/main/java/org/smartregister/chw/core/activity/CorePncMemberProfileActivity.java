@@ -3,7 +3,6 @@ package org.smartregister.chw.core.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,8 +62,7 @@ public abstract class CorePncMemberProfileActivity extends BasePncMemberProfileA
             onBackPressed();
             return true;
         } else if (itemId == R.id.action_pnc_member_registration) {
-            JSONObject form = CoreJsonFormUtils.getAncPncForm(R.string.edit_member_form_title, CoreConstants.JSON_FORM.getFamilyMemberRegister(), memberObject, this);
-            startActivityForResult(CoreJsonFormUtils.getAncPncStartFormIntent(form, this), JsonFormUtils.REQUEST_CODE_GET_JSON);
+            startActivityForResult(getPNCIntent(), JsonFormUtils.REQUEST_CODE_GET_JSON);
             return true;
         } else if (itemId == R.id.action_pnc_registration) {
             getEditMenuItem(item);
@@ -93,10 +91,9 @@ public abstract class CorePncMemberProfileActivity extends BasePncMemberProfileA
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initializeNotificationReferralRecyclerView();
+    protected Intent getPNCIntent(){
+        JSONObject form = CoreJsonFormUtils.getAncPncForm(R.string.edit_member_form_title, CoreConstants.JSON_FORM.getFamilyMemberRegister(), memberObject, this);
+        return CoreJsonFormUtils.getAncPncStartFormIntent(form, this);
     }
 
     protected static CommonPersonObjectClient getClientDetailsByBaseEntityID(@NonNull String baseEntityId) {
@@ -120,6 +117,12 @@ public abstract class CorePncMemberProfileActivity extends BasePncMemberProfileA
     @Override
     public void registerPresenter() {
         presenter = new CorePncMemberProfilePresenter(this, new CorePncMemberProfileInteractor(), memberObject);
+    }
+
+    @Override
+    protected void onCreation() {
+        super.onCreation();
+        initializeNotificationReferralRecyclerView();
     }
 
     protected void initializeNotificationReferralRecyclerView() {
