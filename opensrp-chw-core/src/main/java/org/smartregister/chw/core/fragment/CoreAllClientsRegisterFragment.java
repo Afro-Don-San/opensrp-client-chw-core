@@ -44,6 +44,7 @@ public class CoreAllClientsRegisterFragment extends BaseOpdRegisterFragment {
         if (titleView != null) {
             titleView.setPadding(0, titleView.getTop(), titleView.getPaddingRight(), titleView.getPaddingBottom());
             titleView.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+            titleView.setText(getActivity().getResources().getString(R.string.menu_all_clients));
         }
 
         if (getSearchView() != null) {
