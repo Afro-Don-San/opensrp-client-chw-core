@@ -1038,6 +1038,8 @@ public class CoreConstants {
         public static final String SUSPECTED_GBV= "Suspected GBV";
         public static final String SUSPECTED_CHILD_GBV= "Suspected Child GBV";
         public static final String LOAN_MANAGEMENT_UNIT = "Loan Management Unit";
+        public static final String FP_METHOD = "FP Method";
+        public static final String PREGNANCY_TEST = "Pregnancy Test";
         public static final String BEACH_MANAGEMENT_UNIT = "Beach Management Unit";
     }
 

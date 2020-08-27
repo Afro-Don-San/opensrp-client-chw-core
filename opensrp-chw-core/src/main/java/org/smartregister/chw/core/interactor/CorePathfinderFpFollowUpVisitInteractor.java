@@ -67,7 +67,20 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
                     }
                 }
 
-                createReferralTask(baseEvent.getBaseEntityId(), allSharedPreferences, CoreConstants.TASKS_FOCUS.ANC_DANGER_SIGNS, "", baseEvent.getFormSubmissionId(), facilityLocationId);
+                String taskFocus="";
+                switch (baseEvent.getEventType()){
+                    case CoreConstants.EventType.ANC_REFERRAL:
+                        taskFocus = CoreConstants.TASKS_FOCUS.ANC_DANGER_SIGNS;
+                        break;
+                    case CoreConstants.EventType.FP_METHOD_REFERRAL:
+                        taskFocus = CoreConstants.TASKS_FOCUS.FP_METHOD;
+                        break;
+                    case CoreConstants.EventType.PREGNANCY_TEST_REFERRAL:
+                        taskFocus = CoreConstants.TASKS_FOCUS.PREGNANCY_TEST;
+                        break;
+                }
+
+                createReferralTask(baseEvent.getBaseEntityId(), allSharedPreferences, taskFocus, "", baseEvent.getFormSubmissionId(), facilityLocationId);
             }
 
             String visitID = (editMode) ?
