@@ -161,6 +161,12 @@ public abstract class CoreFamilyOtherMemberProfileActivity extends BaseFamilyOth
         } else if (i == R.id.action_remove_member) {
             removeIndividualProfile();
             return true;
+        } else if (i == R.id.action_hiv_registration) {
+            startHivRegister();
+            return true;
+        } else if (i == R.id.action_tb_registration) {
+            startTbRegister();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -177,6 +183,10 @@ public abstract class CoreFamilyOtherMemberProfileActivity extends BaseFamilyOth
     protected abstract void startFpChangeMethod();
 
     protected abstract void startMalariaRegister();
+
+    protected abstract void startHivRegister();
+
+    protected abstract void startTbRegister();
 
     protected abstract void startMalariaFollowUpVisit();
 
