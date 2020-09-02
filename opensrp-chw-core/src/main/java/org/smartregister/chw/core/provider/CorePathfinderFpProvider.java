@@ -119,6 +119,9 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
         private String dayFp;
         private String fpMethod;
         private PathfinderFpMemberObject pathfinderFpMemberObject;
+        private Date lastVisitDate;
+        private Date fpDate;
+        private Rules rule;
 
         private UpdateAsyncTask(Context context, RegisterViewHolder viewHolder, CommonPersonObjectClient pc) {
             this.context = context;
@@ -137,16 +140,16 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
 
             if (!pathfinderFpMemberObject.getFpStartDate().equals("") && !pathfinderFpMemberObject.getFpStartDate().equals("0")) {
                 if (pathfinderFpMemberObject.isClientIsCurrentlyReferred()) {
-                    Date lastVisitDate;
+                    lastVisitDate = null;
                     if (lastVisit == null) {
                         lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
                     }
                     lastVisitDate = lastVisit.getDate();
-                    Rules rule = PathfinderFamilyPlanningUtil.getReferralFollowupRules();
-                    fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), 0, pathfinderFpMemberObject.getFpMethod());
+                    rule = PathfinderFamilyPlanningUtil.getReferralFollowupRules();
+                    fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate());
                 } else {
 
-                    Date lastVisitDate;
+                    lastVisitDate = null;
                     if (lastVisit == null) {
                         lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD, pathfinderFpMemberObject.getFpMethod());
                     }
@@ -155,44 +158,44 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
                         lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_REGISTRATION, pathfinderFpMemberObject.getFpMethod());
                     }
                     lastVisitDate = lastVisit.getDate();
-                    Rules rule = PathfinderFamilyPlanningUtil.getFpRules(pathfinderFpMemberObject.getFpMethod());
+                    rule = PathfinderFamilyPlanningUtil.getFpRules(pathfinderFpMemberObject.getFpMethod());
                     Integer pillCycles = PathfinderFpDao.getLastPillCycle(pathfinderFpMemberObject.getBaseEntityId(), pathfinderFpMemberObject.getFpMethod());
-                    fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), pillCycles, pathfinderFpMemberObject.getFpMethod());
+                    fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate());
                 }
             } else if (pathfinderFpMemberObject.isPregnancyScreeningDone() && !pathfinderFpMemberObject.getEdd().equals("") && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
-                Date lastVisitDate;
+                lastVisitDate = null;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
                 }
                 lastVisitDate = lastVisit.getDate();
-                Rules rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
-                fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd()), 0, pathfinderFpMemberObject.getPregnancyStatus());
+                rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
+                fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd());
             } else if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
-                Date lastVisitDate;
+                lastVisitDate = null;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
                 }
                 lastVisitDate = lastVisit.getDate();
-                Rules rule = PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules();
-                fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpPregnancyScreeningDate()), 0, pathfinderFpMemberObject.getPregnancyStatus());
+                rule = PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules();
+                fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpPregnancyScreeningDate());
             } else if (pathfinderFpMemberObject.getFpMethod().equals("sdm") && pathfinderFpMemberObject.getPeriodsRegularity().equals("IRREGULAR") || pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
-                Date lastVisitDate;
+                lastVisitDate = null;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
                 }
                 lastVisitDate = lastVisit.getDate();
-                Rules rule;
                 if (pathfinderFpMemberObject.isManRequestedMethodForPartner())
                     rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
                 else
                     rule = PathfinderFamilyPlanningUtil.getSdmMethodChoiceFollowupRules();
-                fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpMethodChoiceDate()), 0, pathfinderFpMemberObject.getPregnancyStatus());
+                fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpMethodChoiceDate());
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void param) {
+            fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate,fpDate, 0, pathfinderFpMemberObject.getPregnancyStatus());
             if (lastVisit != null) {
                 if (fpAlertRule != null
                         && StringUtils.isNotBlank(fpAlertRule.getVisitID())
