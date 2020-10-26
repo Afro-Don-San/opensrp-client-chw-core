@@ -29,6 +29,8 @@ import com.github.ybq.android.spinkit.style.FadingCircle;
 import org.apache.commons.lang3.tuple.Pair;
 import org.smartregister.chw.core.R;
 import org.smartregister.chw.core.activity.ChwP2pModeSelectActivity;
+import org.smartregister.chw.core.activity.CoreCommunityRespondersRegisterActivity;
+import org.smartregister.chw.core.activity.CoreStockInventoryReportActivity;
 import org.smartregister.chw.core.adapter.NavigationAdapter;
 import org.smartregister.chw.core.application.CoreChwApplication;
 import org.smartregister.chw.core.contract.NavigationContract;
@@ -189,6 +191,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         registerLanguageSwitcher(activity);
         registerServiceActivity(activity);
         registerStockReport(activity);
+        registerCommunityResponders(activity);
         registerDeviceToDeviceSync(activity);
         registerSync(activity);
         registerLogout(activity);
@@ -242,8 +245,7 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
             View rlIconServiceReport = rootView.findViewById(R.id.rlServiceReport);
             rlIconServiceReport.setVisibility(View.VISIBLE);
             rlIconServiceReport.setOnClickListener(view -> {
-                Intent intent = menuFlavor.getServiceReportIntent(activity);
-                activity.startActivity(intent);
+                activity.startActivity( menuFlavor.getHIA2ReportActivityIntent(activity));
             });
         }
     }
@@ -253,7 +255,18 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
             View rlIconStockReport = rootView.findViewById(org.smartregister.chw.core.R.id.rlIconStockReport);
             rlIconStockReport.setVisibility(View.VISIBLE);
             rlIconStockReport.setOnClickListener(view -> {
-                Intent intent = menuFlavor.getStockReportIntent(activity);
+                Intent intent = new Intent(activity, CoreStockInventoryReportActivity.class);
+                activity.startActivity(intent);
+            });
+        }
+    }
+
+    private void registerCommunityResponders(Activity activity) {
+        if (menuFlavor.hasCommunityResponders()) {
+            View rlIconResponders = rootView.findViewById(org.smartregister.chw.core.R.id.rlIconResponders);
+            rlIconResponders.setVisibility(View.VISIBLE);
+            rlIconResponders.setOnClickListener(view -> {
+                Intent intent = new Intent(activity, CoreCommunityRespondersRegisterActivity.class);
                 activity.startActivity(intent);
             });
         }
@@ -468,6 +481,10 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
         return drawer;
     }
 
+    public static String getChildNavigationCountString(){
+       return menuFlavor.childNavigationMenuCountString();
+    }
+
     public interface Flavour {
         List<Pair<String, Locale>> getSupportedLanguages();
 
@@ -477,9 +494,14 @@ public class NavigationMenu implements NavigationContract.View, SyncStatusBroadc
 
         boolean hasStockReport();
 
+        boolean hasCommunityResponders();
+
         Intent getStockReportIntent(Activity activity);
 
         Intent getServiceReportIntent(Activity activity);
 
+        String childNavigationMenuCountString();
+
+        Intent getHIA2ReportActivityIntent(Activity activity);
     }
 }

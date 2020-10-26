@@ -39,9 +39,9 @@ public class CoreChildRegisterFragment extends BaseChwRegisterFragment implement
     public static final String CLICK_VIEW_NORMAL = "click_view_normal";
     public static final String CLICK_VIEW_DOSAGE_STATUS = "click_view_dosage_status";
     private static final String DUE_FILTER_TAG = "PRESSED";
-    private View view;
-    private View dueOnlyLayout;
-    private boolean dueFilterActive = false;
+    protected View view;
+    protected View dueOnlyLayout;
+    protected boolean dueFilterActive = false;
 
     @Override
     protected void initializePresenter() {
@@ -182,29 +182,41 @@ public class CoreChildRegisterFragment extends BaseChwRegisterFragment implement
         switchViews(dueOnlyLayout, false);
     }
 
+    protected String getDueFilterCondition() {
+        return presenter().getDueFilterCondition();
+    }
+
     private void dueFilter(View dueOnlyLayout) {
-        filter(searchText(), "", presenter().getDueFilterCondition());
+        filter(searchText(), "", getDueFilterCondition());
         dueOnlyLayout.setTag(DUE_FILTER_TAG);
         switchViews(dueOnlyLayout, true);
+    }
+
+    protected void filterAndSortExecute()
+    {
+        filterandSortExecute(countBundle());
     }
 
     protected void filter(String filterString, String joinTableString, String mainConditionString) {
         filters = filterString;
         joinTable = joinTableString;
         mainCondition = mainConditionString;
-        filterandSortExecute(countBundle());
+        filterAndSortExecute();
     }
 
     private String searchText() {
         return (getSearchView() == null) ? "" : getSearchView().getText().toString();
     }
 
+    protected TextView getDueOnlyTextView(View dueOnlyLayout) {
+        return dueOnlyLayout.findViewById(R.id.due_only_text_view);
+    }
+
     private void switchViews(View dueOnlyLayout, boolean isPress) {
-        TextView dueOnlyTextView = dueOnlyLayout.findViewById(R.id.due_only_text_view);
         if (isPress) {
-            dueOnlyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_due_filter_on, 0);
+            getDueOnlyTextView(dueOnlyLayout).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_due_filter_on, 0);
         } else {
-            dueOnlyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_due_filter_off, 0);
+            getDueOnlyTextView(dueOnlyLayout).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_due_filter_off, 0);
 
         }
     }
@@ -286,10 +298,10 @@ public class CoreChildRegisterFragment extends BaseChwRegisterFragment implement
         String query = countSelect;
         try {
             if (StringUtils.isNotBlank(filters))
-                sqb.addCondition(((CoreChildRegisterFragmentPresenter) presenter()).getFilterString(filters));
+                query = sqb.addCondition(((CoreChildRegisterFragmentPresenter) presenter()).getFilterString(filters));
 
             if (dueFilterActive)
-                sqb.addCondition(((CoreChildRegisterFragmentPresenter) presenter()).getDueCondition());
+                query = sqb.addCondition(((CoreChildRegisterFragmentPresenter) presenter()).getDueCondition());
             query = sqb.Endquery(query);
         } catch (Exception e) {
             Timber.e(e);

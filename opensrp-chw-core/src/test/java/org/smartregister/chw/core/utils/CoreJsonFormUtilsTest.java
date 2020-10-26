@@ -14,9 +14,7 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.CoreLibrary;
@@ -50,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@RunWith(RobolectricTestRunner.class)
 @Config(application = TestApplication.class, shadows = {ContextShadow.class, FamilyLibraryShadowUtil.class,
         UtilsShadowUtil.class, EcSyncHelperShadowHelper.class, FormUtilsShadowHelper.class, LocationHelperShadowHelper.class, LocationPickerViewShadowHelper.class})
 public class CoreJsonFormUtilsTest extends BaseUnitTest {
