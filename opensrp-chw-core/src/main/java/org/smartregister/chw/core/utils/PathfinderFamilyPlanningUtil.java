@@ -25,6 +25,7 @@ public class PathfinderFamilyPlanningUtil extends com.adosa.opensrp.chw.fp.util.
         switch (fpMethod) {
             case PathfinderFamilyPlanningConstants.DBConstants.FP_SDM:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_IMPLANTS:
+            case PathfinderFamilyPlanningConstants.DBConstants.FP_INJECTABLE:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_IUD:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_LAM:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_TUBAL_LIGATION:
