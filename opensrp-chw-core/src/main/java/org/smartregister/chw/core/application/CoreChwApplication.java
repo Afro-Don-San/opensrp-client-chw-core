@@ -10,6 +10,7 @@ import org.smartregister.chw.core.contract.CoreApplication;
 import org.smartregister.chw.core.helper.RulesEngineHelper;
 import org.smartregister.chw.core.repository.AncRegisterRepository;
 import org.smartregister.chw.core.repository.ChwTaskRepository;
+import org.smartregister.chw.core.repository.CommunityResponderRepository;
 import org.smartregister.chw.core.repository.DailyTalliesRepository;
 import org.smartregister.chw.core.repository.HIA2IndicatorsRepository;
 import org.smartregister.chw.core.repository.MalariaRegisterRepository;
@@ -69,6 +70,7 @@ public abstract class CoreChwApplication extends DrishtiApplication implements C
     private DailyTalliesRepository dailyTalliesRepository;
     private MonthlyTalliesRepository monthlyTalliesRepository;
     private Hia2ReportRepository hia2ReportRepository;
+    private CommunityResponderRepository communityResponderRepository;
     private RulesEngineHelper rulesEngineHelper;
 
     public static JsonSpecHelper getJsonSpecHelper() {
@@ -306,4 +308,16 @@ public abstract class CoreChwApplication extends DrishtiApplication implements C
         }
         return hia2ReportRepository;
     }
+
+    public CommunityResponderRepository communityResponderRepository() {
+        if (communityResponderRepository == null) {
+            communityResponderRepository = new CommunityResponderRepository();
+        }
+        return communityResponderRepository;
+    }
+
+    public boolean getChildFlavorUtil() {
+        return false;
+    }
+
 }

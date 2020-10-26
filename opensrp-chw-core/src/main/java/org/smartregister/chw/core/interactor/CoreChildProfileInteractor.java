@@ -1,6 +1,7 @@
 package org.smartregister.chw.core.interactor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.util.Pair;
 
@@ -17,6 +18,7 @@ import org.smartregister.chw.anc.AncLibrary;
 import org.smartregister.chw.anc.domain.Visit;
 import org.smartregister.chw.anc.util.NCUtils;
 import org.smartregister.chw.core.R;
+import org.smartregister.chw.core.activity.WebViewActivity;
 import org.smartregister.chw.core.application.CoreChwApplication;
 import org.smartregister.chw.core.contract.CoreChildProfileContract;
 import org.smartregister.chw.core.dao.AlertDao;
@@ -24,6 +26,7 @@ import org.smartregister.chw.core.dao.ChwNotificationDao;
 import org.smartregister.chw.core.domain.ProfileTask;
 import org.smartregister.chw.core.enums.ImmunizationState;
 import org.smartregister.chw.core.repository.ChwTaskRepository;
+import org.smartregister.chw.core.utils.BaChildUtilsFlv;
 import org.smartregister.chw.core.utils.ChildDBConstants;
 import org.smartregister.chw.core.utils.ChwServiceSchedule;
 import org.smartregister.chw.core.utils.CoreChildService;
@@ -54,6 +57,7 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.sync.helper.ECSyncHelper;
+import org.smartregister.thinkmd.ThinkMDLibrary;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.ImageUtils;
 import org.smartregister.view.LocationPickerView;
@@ -69,10 +73,17 @@ import java.util.Set;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
+import static org.smartregister.chw.core.dao.ChildDao.getBaseEntityID;
+import static org.smartregister.chw.core.dao.ChildDao.getThinkMDCarePlan;
+import static org.smartregister.chw.core.utils.CoreConstants.INTENT_KEY.CONTENT_TO_DISPLAY;
+import static org.smartregister.chw.core.utils.CoreConstants.ThinkMdConstants.HTML_ASSESSMENT;
+import static org.smartregister.chw.core.utils.Utils.getDuration;
+import static org.smartregister.chw.core.utils.Utils.getFormTag;
+
 public class CoreChildProfileInteractor implements CoreChildProfileContract.Interactor {
     public static final String TAG = CoreChildProfileInteractor.class.getName();
     protected AppExecutors appExecutors;
-    private CommonPersonObjectClient pClient;
+    public CommonPersonObjectClient pClient;
     private Map<String, Date> vaccineList = new LinkedHashMap<>();
     private String childBaseEntityId;
 
@@ -181,13 +192,19 @@ public class CoreChildProfileInteractor implements CoreChildProfileContract.Inte
     public void onDestroy(boolean isChangingConfiguration) {        //todo
     }
 
+    private String getQuery(String baseEntityId) {
+        if (CoreChwApplication.getInstance().getChildFlavorUtil()) {
+            return BaChildUtilsFlv.mainSelect(CoreConstants.TABLE_NAME.CHILD, CoreConstants.TABLE_NAME.FAMILY, CoreConstants.TABLE_NAME.FAMILY_MEMBER, baseEntityId);
+        } else {
+            return CoreChildUtils.mainSelect(CoreConstants.TABLE_NAME.CHILD, CoreConstants.TABLE_NAME.FAMILY, CoreConstants.TABLE_NAME.FAMILY_MEMBER, baseEntityId);
+        }
+    }
+
     @Override
     public void updateChildCommonPerson(String baseEntityId) {
-        String query = CoreChildUtils.mainSelect(CoreConstants.TABLE_NAME.CHILD, CoreConstants.TABLE_NAME.FAMILY, CoreConstants.TABLE_NAME.FAMILY_MEMBER, baseEntityId);
-
         Cursor cursor = null;
         try {
-            cursor = getCommonRepository(CoreConstants.TABLE_NAME.CHILD).rawCustomQueryForAdapter(query);
+            cursor = getCommonRepository(CoreConstants.TABLE_NAME.CHILD).rawCustomQueryForAdapter(getQuery(baseEntityId));
             if (cursor != null && cursor.moveToFirst()) {
                 CommonPersonObject personObject = getCommonRepository(CoreConstants.TABLE_NAME.CHILD).readAllcommonforCursorAdapter(cursor);
                 pClient = new CommonPersonObjectClient(personObject.getCaseId(),
@@ -217,11 +234,11 @@ public class CoreChildProfileInteractor implements CoreChildProfileContract.Inte
     @Override
     public void refreshProfileView(final String baseEntityId, final boolean isForEdit, final CoreChildProfileContract.InteractorCallBack callback) {
         Runnable runnable = () -> {
-            String query = CoreChildUtils.mainSelect(CoreConstants.TABLE_NAME.CHILD, CoreConstants.TABLE_NAME.FAMILY, CoreConstants.TABLE_NAME.FAMILY_MEMBER, baseEntityId);
+            // String query = CoreChildUtils.mainSelect(CoreConstants.TABLE_NAME.CHILD, CoreConstants.TABLE_NAME.FAMILY, CoreConstants.TABLE_NAME.FAMILY_MEMBER, baseEntityId);
 
             Cursor cursor = null;
             try {
-                cursor = getCommonRepository(CoreConstants.TABLE_NAME.CHILD).rawCustomQueryForAdapter(query);
+                cursor = getCommonRepository(CoreConstants.TABLE_NAME.CHILD).rawCustomQueryForAdapter(getQuery(baseEntityId));
                 if (cursor != null && cursor.moveToFirst()) {
                     CommonPersonObject personObject = getCommonRepository(CoreConstants.TABLE_NAME.CHILD).readAllcommonforCursorAdapter(cursor);
                     pClient = new CommonPersonObjectClient(personObject.getCaseId(),
@@ -457,6 +474,61 @@ public class CoreChildProfileInteractor implements CoreChildProfileContract.Inte
         appExecutors.diskIO().execute(runnable);
     }
 
+    @Override
+    public void createCarePlanEvent(@NotNull Context context, @NotNull String encodedBundle, final CoreChildProfileContract.InteractorCallBack callback) {
+        Runnable runnable = () -> {
+            try {
+                // getting thinkMD id from encoded fhir bundle
+                String thinkMdId = ThinkMDLibrary.getInstance().getThinkMDPatientId(encodedBundle);
+                // getting the baseEntityId mapped to thinkMD
+                String baseEntityId = getBaseEntityID(context.getResources().getString(R.string.thinkmd_identifier_type), thinkMdId);
+                // creating the event to sync with server
+                if (baseEntityId != null) {
+                    Event carePlanEvent = ThinkMDLibrary.getInstance().createCarePlanEvent(encodedBundle,
+                            getFormTag(getAllSharedPreferences()),
+                            baseEntityId);
+
+                    JSONObject eventPartialJson = new JSONObject(JsonFormUtils.gson.toJson(carePlanEvent));
+                    ECSyncHelper.getInstance(context).addEvent(baseEntityId, eventPartialJson);
+
+                    appExecutors.mainThread().execute(callback::carePlanEventCreated);
+                }
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+        };
+
+        appExecutors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void launchThinkMDHealthAssessment(@NotNull Context context) {
+
+    }
+
+    @Override
+    public void showThinkMDCarePlan(@NotNull Context context, final CoreChildProfileContract.InteractorCallBack callback) {
+        Runnable runnable = () -> {
+            try {
+                String carePlan = getThinkMDCarePlan(getChildBaseEntityId(), HTML_ASSESSMENT);
+                appExecutors.mainThread().execute(() -> {
+
+                    if (!StringUtils.isEmpty(carePlan))
+                        callback.noThinkMDCarePlanFound();
+                    else {
+                        Intent intent = new Intent(context, WebViewActivity.class);
+                        intent.putExtra(CONTENT_TO_DISPLAY, carePlan);
+                        context.startActivity(intent);
+                    }
+                });
+
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+        };
+
+        appExecutors.diskIO().execute(runnable);
+    }
 
     public void processPopulatableFields(CommonPersonObjectClient client, JSONObject jsonObject, JSONArray jsonArray) throws JSONException {
 
@@ -523,7 +595,7 @@ public class CoreChildProfileInteractor implements CoreChildProfileContract.Inte
 
     private void getAge(CommonPersonObjectClient client, JSONObject jsonObject) throws JSONException {
         String dobString = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.DOB, false);
-        dobString = org.smartregister.family.util.Utils.getDuration(dobString);
+        dobString = getDuration(dobString);
         dobString = dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : "0";
         jsonObject.put(JsonFormUtils.VALUE, Integer.valueOf(dobString));
     }
