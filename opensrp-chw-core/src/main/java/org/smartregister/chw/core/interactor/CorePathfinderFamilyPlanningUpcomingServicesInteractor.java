@@ -94,6 +94,8 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         }
 
         if (!pathfinderFpAlertObject.getEdd().isEmpty() && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
+            lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId());
+            lastVisitDate = lastVisit.getDate();
             alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantWomenFpRules(), lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpAlertObject.getEdd()), fp_pillCycles, fpMethod);
 
             serviceDueDate = alertRule.getDueDate();

@@ -87,9 +87,13 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
     }
 
     protected void initializeNotificationReferralRecyclerView() {
-        notificationAndReferralLayout = findViewById(R.id.notification_and_referral_row);
-        notificationAndReferralRecyclerView = findViewById(R.id.notification_and_referral_recycler_view);
-        notificationAndReferralRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        try {
+            notificationAndReferralLayout = findViewById(R.id.notification_and_referral_row);
+            notificationAndReferralRecyclerView = findViewById(R.id.notification_and_referral_recycler_view);
+            notificationAndReferralRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }catch (Exception e){
+            Timber.e(e);
+        }
     }
 
     protected abstract void removeMember();
