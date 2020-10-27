@@ -224,6 +224,9 @@ public class CoreClientProcessor extends ClientProcessorForJava {
             case org.smartregister.chw.tb.util.Constants.EventType.FOLLOW_UP_VISIT:
             case org.smartregister.chw.hiv.util.Constants.EventType.FOLLOW_UP_VISIT:
             case PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD:
+            case PathfinderFamilyPlanningConstants.EventType.INTRODUCTION_TO_FAMILY_PLANNING:
+            case PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_PREGNANCY_SCREENING:
+            case PathfinderFamilyPlanningConstants.EventType.CHOOSING_FAMILY_PLANNING_METHOD:
             case PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_METHOD_REFERRAL_FOLLOWUP:
                 if (eventClient.getEvent() == null) {
                     return;

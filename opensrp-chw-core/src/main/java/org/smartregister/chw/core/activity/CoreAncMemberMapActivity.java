@@ -93,7 +93,7 @@ public class CoreAncMemberMapActivity extends AppCompatActivity {
 
     }
 
-    private void inflateToolbar() {
+    protected void inflateToolbar() {
         Toolbar toolbar = findViewById(R.id.back_anc_toolbar);
         CustomFontTextView toolBarTextView = toolbar.findViewById(R.id.anc_map_toolbar_title);
         toolBarTextView.setText(String.format(getString(R.string.return_to_profile), ancWomanName.substring(0, ancWomanName.indexOf(" "))));
@@ -129,7 +129,7 @@ public class CoreAncMemberMapActivity extends AppCompatActivity {
         });
     }
 
-    private void addCommunityTransporterClickListener(@NonNull KujakuMapView kujakuMapView) {
+    protected void addCommunityTransporterClickListener(@NonNull KujakuMapView kujakuMapView) {
         kujakuMapView.setOnFeatureClickListener(features -> {
             Feature feature = features.get(0);
             if (feature != null)
@@ -177,7 +177,7 @@ public class CoreAncMemberMapActivity extends AppCompatActivity {
         return new LatLng(latitude, longitude);
     }
 
-    private void zoomToPatientLocation(@NonNull MapboxMap mapboxMap, @Nullable BoundingBox boundingBox) {
+    protected void zoomToPatientLocation(@NonNull MapboxMap mapboxMap, @Nullable BoundingBox boundingBox) {
         LatLng userLocation = extractUserLocation();
         if (userLocation != null && boundingBox == null) {
             CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -213,7 +213,7 @@ public class CoreAncMemberMapActivity extends AppCompatActivity {
     }
 
     @Nullable
-    private BoundingBox showCommunityTransporters(@NonNull MapboxMap mapboxMap, @Nullable FeatureCollection featureCollection) {
+    protected BoundingBox showCommunityTransporters(@NonNull MapboxMap mapboxMap, @Nullable FeatureCollection featureCollection) {
         if (featureCollection != null && featureCollection.features() != null && featureCollection.features().size() > 0 && communityTransportersSource != null) {
             BoundingBox boundingBox = featureCollection.bbox();
 
@@ -231,7 +231,7 @@ public class CoreAncMemberMapActivity extends AppCompatActivity {
     }
 
     @Nullable
-    private FeatureCollection loadCommunityTransporters() {
+    protected FeatureCollection loadCommunityTransporters() {
         return FeatureCollection.fromFeatures(getRespondersFeatureList());
     }
 
