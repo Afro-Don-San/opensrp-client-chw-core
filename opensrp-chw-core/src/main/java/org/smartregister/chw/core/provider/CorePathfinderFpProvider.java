@@ -181,16 +181,13 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
                 lastVisitDate = lastVisit.getDate();
                 rule = PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules();
                 fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpPregnancyScreeningDate());
-            } else if (pathfinderFpMemberObject.getFpMethod().equals("sdm") && pathfinderFpMemberObject.getPeriodsRegularity().equals("IRREGULAR") || pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
+            } else if (pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
                 lastVisitDate = null;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
                 }
                 lastVisitDate = lastVisit.getDate();
-                if (pathfinderFpMemberObject.isManRequestedMethodForPartner())
-                    rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
-                else
-                    rule = PathfinderFamilyPlanningUtil.getSdmMethodChoiceFollowupRules();
+                rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
                 fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpMethodChoiceDate());
             } else if (pathfinderFpMemberObject.isClientIsCurrentlyReferred()) {
                 if (lastVisit == null) {

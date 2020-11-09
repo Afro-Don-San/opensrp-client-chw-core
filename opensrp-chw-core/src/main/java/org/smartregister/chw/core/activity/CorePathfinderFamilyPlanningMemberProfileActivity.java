@@ -410,7 +410,6 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
 
     private boolean isCHWMethod(String fpMethod) {
         switch (fpMethod) {
-            case PathfinderFamilyPlanningConstants.DBConstants.FP_SDM:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_POP:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_COC:
             case PathfinderFamilyPlanningConstants.DBConstants.FP_FEMALE_CONDOM:
@@ -476,17 +475,14 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 lastVisitDate = lastVisit.getDate();
                 Rules rule = PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules();
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpPregnancyScreeningDate()), 0, pathfinderFpMemberObject.getPregnancyStatus());
-            } else if (pathfinderFpMemberObject.getFpMethod().equals("sdm") && pathfinderFpMemberObject.getPeriodsRegularity().equals("IRREGULAR") || pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
+            } else if (pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
                 }
                 lastVisitDate = lastVisit.getDate();
                 Rules rule;
-                if (pathfinderFpMemberObject.isManRequestedMethodForPartner())
-                    rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
-                else
-                    rule = PathfinderFamilyPlanningUtil.getSdmMethodChoiceFollowupRules();
+                rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpMethodChoiceDate()), 0, pathfinderFpMemberObject.getPregnancyStatus());
             }
             return null;
@@ -497,7 +493,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
             if (pathfinderFpMemberObject.isClientIsCurrentlyReferred() && !pathfinderFpMemberObject.getIssuedReferralService().equals("Pregnancy Test Referral")) {
                 updateReferralFollowup(fpAlertRule.getButtonStatus());
             }else if (pathfinderFpMemberObject.getFpStartDate().equals("") || pathfinderFpMemberObject.getFpStartDate().equals("0")) {
-                if (pathfinderFpMemberObject.isFpMethodChoiceDone() && !pathfinderFpMemberObject.isManRequestedMethodForPartner() && (!pathfinderFpMemberObject.getFpMethod().equals("sdm") || pathfinderFpMemberObject.getPeriodsRegularity().equals("REGULAR"))) {
+                if (pathfinderFpMemberObject.isFpMethodChoiceDone() && !pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
                     if (isCHWMethod(pathfinderFpMemberObject.getFpMethod()))
                         showGiveFpMethodButton();
                 } else if (pathfinderFpMemberObject.isPregnancyScreeningDone() && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_LIKELY_PREGNANT)) {
@@ -526,8 +522,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                     fpAlertRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.OVERDUE) ||
                             fpAlertRule.getButtonStatus().equalsIgnoreCase(CoreConstants.VISIT_STATE.DUE)) &&
                     !pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT) &&
-                    !pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT) &&
-                    (!pathfinderFpMemberObject.getFpMethod().equals("sdm") || pathfinderFpMemberObject.getPeriodsRegularity().equals("REGULAR"))
+                    !pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)
             ) {
                 updateFollowUpVisitButton(fpAlertRule.getButtonStatus());
             } else {

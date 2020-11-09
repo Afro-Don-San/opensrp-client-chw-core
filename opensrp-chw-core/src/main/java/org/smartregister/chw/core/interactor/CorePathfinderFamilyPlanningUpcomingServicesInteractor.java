@@ -121,14 +121,9 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
                 serviceList.add(baseUpcomingService);
         }
 
-        if ((pathfinderFpAlertObject.getFpMethod().equals("sdm") && pathfinderFpAlertObject.getPeriodsRegularity().equals("IRREGULAR")) || pathfinderFpAlertObject.isManRequestedMethodForPartner()) {
-            if (pathfinderFpAlertObject.isManRequestedMethodForPartner()) {
-                rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
-                serviceName = context.getString(R.string.man_chose_fp_method_for_partner_followup);
-            } else {
-                rule = PathfinderFamilyPlanningUtil.getSdmMethodChoiceFollowupRules();
-                serviceName = context.getString(R.string.fp_method_choice_followup);
-            }
+        if (pathfinderFpAlertObject.isManRequestedMethodForPartner()) {
+            rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
+            serviceName = context.getString(R.string.man_chose_fp_method_for_partner_followup);
 
             alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpAlertObject.getFpMethodChoiceDate()), fp_pillCycles, fpMethod);
             serviceDueDate = alertRule.getDueDate();
