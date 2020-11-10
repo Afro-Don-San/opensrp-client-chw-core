@@ -165,6 +165,9 @@ public class CoreConstants {
         public static final String CLOSE_TB_FEEDBACK = "Close Tb Feedback";
         public static final String FP_METHOD_REFERRAL = "FP Method Referral";
         public static final String PREGNANCY_TEST_REFERRAL = "Pregnancy Test Referral";
+        public static final String STI_REFERRAL = "STI Referral";
+        public static final String HIV_REFERRAL = "HIV Referral";
+        public static final String HTC_REFERRAL = "HTC Referral";
     }
 
     public static final class EncounterType {
@@ -1144,6 +1147,8 @@ public class CoreConstants {
         public static final String LOAN_MANAGEMENT_UNIT = "Loan Management Unit";
         public static final String FP_METHOD = "FP Method";
         public static final String PREGNANCY_TEST = "Pregnancy Test";
+        public static final String SUSPECTED_STI = "Suspected STI";
+        public static final String CTC_SERVICES = "Care and Treatment (CTC) services";
         public static final String BEACH_MANAGEMENT_UNIT = "Beach Management Unit";
     }
 
