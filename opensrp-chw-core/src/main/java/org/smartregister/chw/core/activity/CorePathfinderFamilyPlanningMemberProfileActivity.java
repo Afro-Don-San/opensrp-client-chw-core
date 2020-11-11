@@ -46,6 +46,7 @@ import org.smartregister.chw.core.utils.PathfinderFamilyPlanningUtil;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.AlertStatus;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 
@@ -58,7 +59,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT;
 import static org.smartregister.chw.core.utils.Utils.updateToolbarTitle;
 
 public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends BasePathfinderFpProfileActivity
@@ -91,7 +91,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
             notificationAndReferralLayout = findViewById(R.id.notification_and_referral_row);
             notificationAndReferralRecyclerView = findViewById(R.id.notification_and_referral_recycler_view);
             notificationAndReferralRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        }catch (Exception e){
+        } catch (Exception e) {
             Timber.e(e);
         }
     }
@@ -435,9 +435,10 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
 
         @Override
         protected Void doInBackground(Void... voids) {
-            lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId(), FP_FOLLOW_UP_VISIT, pathfinderFpMemberObject.getFpMethod());
+            lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
 
             if (pathfinderFpMemberObject.isClientIsCurrentlyReferred()) {
+                Timber.e("Coze test : client is currently referred");
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
@@ -446,6 +447,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 Rules rule = PathfinderFamilyPlanningUtil.getReferralFollowupRules();
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), 0, pathfinderFpMemberObject.getFpMethod());
             } else if (!pathfinderFpMemberObject.getFpStartDate().equals("") && !pathfinderFpMemberObject.getFpStartDate().equals("0")) {
+                Timber.e("Coze test : client given fp method");
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
@@ -460,6 +462,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), pillCycles, pathfinderFpMemberObject.getFpMethod());
 
             } else if (pathfinderFpMemberObject.isPregnancyScreeningDone() && !pathfinderFpMemberObject.getEdd().equals("") && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
+                Timber.e("Coze test : client is pregnant");
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
@@ -468,6 +471,7 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                 Rules rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd()), 0, pathfinderFpMemberObject.getPregnancyStatus());
             } else if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
+                Timber.e("Coze test : client is not unlikely pregnant");
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
@@ -492,24 +496,39 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
         protected void onPostExecute(Void param) {
             if (pathfinderFpMemberObject.isClientIsCurrentlyReferred() && !pathfinderFpMemberObject.getIssuedReferralService().equals("Pregnancy Test Referral")) {
                 updateReferralFollowup(fpAlertRule.getButtonStatus());
-            }else if (pathfinderFpMemberObject.getFpStartDate().equals("") || pathfinderFpMemberObject.getFpStartDate().equals("0")) {
+            } else if (pathfinderFpMemberObject.getFpStartDate().equals("") || pathfinderFpMemberObject.getFpStartDate().equals("0")) {
+
+                Timber.e("Coze test : 1");
                 if (pathfinderFpMemberObject.isFpMethodChoiceDone() && !pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
+                    Timber.e("Coze test : 2");
                     if (isCHWMethod(pathfinderFpMemberObject.getFpMethod()))
                         showGiveFpMethodButton();
                 } else if (pathfinderFpMemberObject.isPregnancyScreeningDone() && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_LIKELY_PREGNANT)) {
+                    Timber.e("Coze test : 3");
                     if (pathfinderFpMemberObject.getPeriodsRegularity().equals("IRREGULAR") || pathfinderFpMemberObject.isManRequestedMethodForPartner()) {
                         updateFpMethodChoiceButton(fpAlertRule.getButtonStatus());
                     } else {
                         showChooseFpMethodButton();
                     }
+                } else if (pathfinderFpMemberObject.isPregnancyScreeningDone() && !pathfinderFpMemberObject.getEdd().equals("") && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
+                    Timber.e("Coze test : Client pregnant");
+                    if (fpAlertRule.getButtonStatus().equals(CoreConstants.VISIT_STATE.DUE) || fpAlertRule.getButtonStatus().equals(CoreConstants.VISIT_STATE.OVERDUE)) {
+                        Timber.e("Coze test : Client pregnant");
+                        showFpPregnancyScreeningButton();
+                    }
                 } else if (pathfinderFpMemberObject.isIntroductionToFamilyPlanningDone()) {
+                    Timber.e("Coze test : 4");
                     if (pathfinderFpMemberObject.getPregnancyStatus().isEmpty() || pathfinderFpMemberObject.getPregnancyStatus().equals("null"))
                         showFpPregnancyScreeningButton();
                     else if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT) || pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
-                        if (pathfinderFpMemberObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT))
+                        if (pathfinderFpMemberObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT)) {
+                            Timber.e("Coze test : 5");
                             updatePregnacyScreeningButton(fpAlertRule.getButtonStatus());
-                        else
+                        }
+                        else {
+                            Timber.e("Coze test : 6 = "+fpAlertRule.getButtonStatus());
                             updatePregnancyTestFollowup(fpAlertRule.getButtonStatus());
+                        }
                     }
                 } else {
                     showIntroductionToFpButton();

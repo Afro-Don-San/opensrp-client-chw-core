@@ -84,7 +84,7 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         }
         lastVisitDate = lastVisit.getDate();
         PathfinderFpAlertRule alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, fp_pillCycles, fpMethod);
-        if (!pathfinderFpAlertObject.getFpStartDate().equals("") && !fpMethodUsed.isEmpty()) {
+        if (!pathfinderFpAlertObject.getFpStartDate().equals("0") && !pathfinderFpAlertObject.getFpStartDate().equals("") && !fpMethodUsed.isEmpty()) {
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
             serviceName = MessageFormat.format(context.getString(R.string.refill), fpMethod);

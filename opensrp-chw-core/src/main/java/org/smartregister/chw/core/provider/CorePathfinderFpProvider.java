@@ -10,7 +10,6 @@ import com.adosa.opensrp.chw.fp.dao.PathfinderFpDao;
 import com.adosa.opensrp.chw.fp.domain.PathfinderFpMemberObject;
 import com.adosa.opensrp.chw.fp.provider.BasePathfinderFpRegisterProvider;
 import com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants;
-import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jeasy.rules.api.Rules;
@@ -28,10 +27,6 @@ import org.smartregister.view.contract.SmartRegisterClient;
 
 import java.util.Date;
 import java.util.Set;
-
-import timber.log.Timber;
-
-import static com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants.EventType.FP_FOLLOW_UP_VISIT;
 
 /**
  * Created by cozej4 on 4/28/20.
@@ -173,6 +168,12 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
                 lastVisitDate = lastVisit.getDate();
                 rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
                 fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd());
+            } else if (pathfinderFpMemberObject.isClientIsCurrentlyReferred()) {
+                if (lastVisit == null) {
+                    lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
+                }
+                lastVisitDate = lastVisit.getDate();
+                rule = PathfinderFamilyPlanningUtil.getReferralFollowupRules();
             } else if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
                 lastVisitDate = null;
                 if (lastVisit == null) {
@@ -189,12 +190,6 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
                 lastVisitDate = lastVisit.getDate();
                 rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
                 fpDate = FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpMethodChoiceDate());
-            } else if (pathfinderFpMemberObject.isClientIsCurrentlyReferred()) {
-                if (lastVisit == null) {
-                    lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
-                }
-                lastVisitDate = lastVisit.getDate();
-                rule = PathfinderFamilyPlanningUtil.getReferralFollowupRules();
             }
             return null;
         }
@@ -205,14 +200,6 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), 0, pathfinderFpMemberObject.getFpMethod());
             } else {
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, 0, pathfinderFpMemberObject.getFpMethod());
-
-                if(pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)){
-                    Timber.e("Coze lave :: client is "+pathfinderFpMemberObject.getFirstName());
-                    Timber.e("Coze lave :: edd is "+pathfinderFpMemberObject.getEdd());
-                    Timber.e("Coze lave :: lastVisitDate is "+lastVisitDate);
-                    Timber.e("Coze lave :: fpAlertRule "+new Gson().toJson(fpAlertRule));
-
-                }
             }
             if (lastVisit != null) {
                 if (fpAlertRule != null
