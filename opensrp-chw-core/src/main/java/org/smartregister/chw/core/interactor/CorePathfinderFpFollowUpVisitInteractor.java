@@ -61,6 +61,7 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
             if (
                     baseEvent.getEventType().equals(CoreConstants.EventType.ANC_REFERRAL) ||
                             baseEvent.getEventType().equals(CoreConstants.EventType.FP_METHOD_REFERRAL) ||
+                            baseEvent.getEventType().equals(CoreConstants.EventType.FP_METHOD_REFILL_REFERRAL) ||
                             baseEvent.getEventType().equals(CoreConstants.EventType.STI_REFERRAL) ||
                             baseEvent.getEventType().equals(CoreConstants.EventType.HIV_REFERRAL) ||
                             baseEvent.getEventType().equals(CoreConstants.EventType.HTC_REFERRAL) ||
@@ -80,6 +81,7 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
                         taskFocus = CoreConstants.TASKS_FOCUS.ANC_DANGER_SIGNS;
                         break;
                     case CoreConstants.EventType.FP_METHOD_REFERRAL:
+                    case CoreConstants.EventType.FP_METHOD_REFILL_REFERRAL:
                         taskFocus = CoreConstants.TASKS_FOCUS.FP_METHOD;
                         break;
                     case CoreConstants.EventType.PREGNANCY_TEST_REFERRAL:

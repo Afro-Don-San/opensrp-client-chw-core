@@ -164,6 +164,7 @@ public class CoreConstants {
         public static final String CLOSE_HIV_FEEDBACK = "Close Hiv Feedback";
         public static final String CLOSE_TB_FEEDBACK = "Close Tb Feedback";
         public static final String FP_METHOD_REFERRAL = "FP Method Referral";
+        public static final String FP_METHOD_REFILL_REFERRAL = "Family Planning Method Refill Referral";
         public static final String PREGNANCY_TEST_REFERRAL = "Pregnancy Test Referral";
         public static final String STI_REFERRAL = "STI Referral";
         public static final String HIV_REFERRAL = "HIV Referral";

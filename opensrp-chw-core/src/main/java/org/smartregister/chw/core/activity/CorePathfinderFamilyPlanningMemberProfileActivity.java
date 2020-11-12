@@ -46,7 +46,6 @@ import org.smartregister.chw.core.utils.PathfinderFamilyPlanningUtil;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
-import org.smartregister.domain.AlertStatus;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 
@@ -524,9 +523,10 @@ public abstract class CorePathfinderFamilyPlanningMemberProfileActivity extends 
                         if (pathfinderFpMemberObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT)) {
                             Timber.e("Coze test : 5");
                             updatePregnacyScreeningButton(fpAlertRule.getButtonStatus());
-                        }
-                        else {
-                            Timber.e("Coze test : 6 = "+fpAlertRule.getButtonStatus());
+                        } else if (pathfinderFpMemberObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.COMPLETE_PREGNANCY_TEST_QUESTIONS_WITHOUT_COMPLETING_REFERRAL)) {
+                            showFpPregnancyScreeningButton();
+                        } else {
+                            Timber.e("Coze test : 6 = " + fpAlertRule.getButtonStatus());
                             updatePregnancyTestFollowup(fpAlertRule.getButtonStatus());
                         }
                     }

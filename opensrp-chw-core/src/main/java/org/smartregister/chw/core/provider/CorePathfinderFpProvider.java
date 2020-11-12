@@ -70,7 +70,7 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
 
     private void setVisitButtonNextDueStatus(Context context, String visitDue, Button dueButton) {
         dueButton.setTextColor(context.getResources().getColor(org.smartregister.chw.core.R.color.light_grey_text));
-        dueButton.setText(context.getString(org.smartregister.chw.core.R.string.fp_visit_day_next_due, visitDue));
+        dueButton.setText(context.getString(com.adosa.opensrp.chw.fp.R.string.pathfinder_fp_visit_day_next_due, visitDue));
         dueButton.setBackgroundResource(org.smartregister.chw.core.R.drawable.colorless_btn_selector);
         dueButton.setOnClickListener(null);
     }
@@ -79,9 +79,9 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
     private void setVisitButtonDueStatus(Context context, String visitDue, Button dueButton) {
         dueButton.setTextColor(context.getResources().getColor(org.smartregister.chw.core.R.color.alert_in_progress_blue));
         if (visitDue.equalsIgnoreCase("0")) {
-            dueButton.setText(context.getString(org.smartregister.chw.core.R.string.fp_visit_day_due_today));
+            dueButton.setText(context.getString(com.adosa.opensrp.chw.fp.R.string.pathfinder_fp_visit_day_due_today));
         } else {
-            dueButton.setText(context.getString(org.smartregister.chw.core.R.string.fp_visit_day_due, visitDue));
+            dueButton.setText(context.getString(com.adosa.opensrp.chw.fp.R.string.pathfinder_fp_visit_day_due, visitDue));
         }
         dueButton.setBackgroundResource(org.smartregister.chw.core.R.drawable.blue_btn_selector);
         dueButton.setOnClickListener(onClickListener);
@@ -90,10 +90,10 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
     private void setVisitButtonOverdueStatus(Context context, String visitDue, Button dueButton) {
         dueButton.setTextColor(context.getResources().getColor(org.smartregister.chw.core.R.color.white));
         if (visitDue.equalsIgnoreCase("0")) {
-            dueButton.setText(context.getString(org.smartregister.chw.core.R.string.fp_visit_day_overdue_today));
+            dueButton.setText(context.getString(com.adosa.opensrp.chw.fp.R.string.pathfinder_fp_visit_day_overdue_today));
 
         } else {
-            dueButton.setText(context.getString(org.smartregister.chw.core.R.string.fp_visit_day_overdue, visitDue));
+            dueButton.setText(context.getString(com.adosa.opensrp.chw.fp.R.string.pathfinder_fp_visit_day_overdue, visitDue));
         }
         dueButton.setBackgroundResource(org.smartregister.chw.core.R.drawable.overdue_red_btn_selector);
         dueButton.setOnClickListener(onClickListener);

@@ -87,7 +87,7 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         if (!pathfinderFpAlertObject.getFpStartDate().equals("0") && !pathfinderFpAlertObject.getFpStartDate().equals("") && !fpMethodUsed.isEmpty()) {
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
-            serviceName = MessageFormat.format(context.getString(R.string.refill), fpMethod);
+            serviceName = MessageFormat.format(context.getString(R.string.pathfinder_refill), fpMethod);
             BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
             if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
