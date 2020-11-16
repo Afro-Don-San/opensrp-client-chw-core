@@ -75,8 +75,16 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
                     }
                 }
 
-                String taskFocus="";
-                switch (baseEvent.getEventType()){
+                String unique_id = null;
+                for (Obs ob : baseEvent.getObs()) {
+                    if (ob.getFieldCode().equals("unique_id")) {
+                        unique_id = ob.getValues().get(0).toString();
+                        break;
+                    }
+                }
+
+                String taskFocus = "";
+                switch (baseEvent.getEventType()) {
                     case CoreConstants.EventType.ANC_REFERRAL:
                         taskFocus = CoreConstants.TASKS_FOCUS.ANC_DANGER_SIGNS;
                         break;
@@ -98,7 +106,7 @@ public class CorePathfinderFpFollowUpVisitInteractor extends BasePathfinderFpFol
                         break;
                 }
 
-                createReferralTask(baseEvent.getBaseEntityId(), allSharedPreferences, taskFocus, "", baseEvent.getFormSubmissionId(), facilityLocationId);
+                createReferralTask(baseEvent.getBaseEntityId(), allSharedPreferences, taskFocus, unique_id, baseEvent.getFormSubmissionId(), facilityLocationId);
             }
 
             String visitID = (editMode) ?
