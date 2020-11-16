@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 public class PathfinderFpAlertRule implements ICommonRule {
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private String visitID;
@@ -184,7 +186,7 @@ public class PathfinderFpAlertRule implements ICommonRule {
             if ((lastVisit.isAfter(dueDate) || lastVisit.isEqual(dueDate)) && lastVisit.isBefore(expiryDate))
                 return CoreConstants.VISIT_STATE.VISIT_DONE;
             if (lastVisit.isBefore(dueDate)) {
-                if (currentDate.isBefore(overDueDate) && (currentDate.isAfter(dueDate) || currentDate.isEqual(dueDate)))
+                if (currentDate.isBefore(overDueDate) && (Days.daysBetween(dueDate, currentDate).getDays() >= 0))
                     return CoreConstants.VISIT_STATE.DUE;
 
                 if (currentDate.isBefore(expiryDate) && (currentDate.isAfter(overDueDate) || currentDate.isEqual(overDueDate)))

@@ -226,6 +226,7 @@ public class CoreClientProcessor extends ClientProcessorForJava {
             case PathfinderFamilyPlanningConstants.EventType.GIVE_FAMILY_PLANNING_METHOD:
             case PathfinderFamilyPlanningConstants.EventType.INTRODUCTION_TO_FAMILY_PLANNING:
             case PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_PREGNANCY_SCREENING:
+            case PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_PREGNANCY_TEST_REFERRAL_FOLLOWUP:
             case PathfinderFamilyPlanningConstants.EventType.CHOOSING_FAMILY_PLANNING_METHOD:
             case PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_METHOD_REFERRAL_FOLLOWUP:
                 if (eventClient.getEvent() == null) {

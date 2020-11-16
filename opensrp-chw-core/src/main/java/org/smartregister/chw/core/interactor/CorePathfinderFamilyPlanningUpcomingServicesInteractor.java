@@ -24,6 +24,9 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_PREGNANCY_SCREENING;
+import static com.adosa.opensrp.chw.fp.util.PathfinderFamilyPlanningConstants.EventType.FAMILY_PLANNING_PREGNANCY_TEST_REFERRAL_FOLLOWUP;
+
 
 public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends BaseAncUpcomingServicesInteractor {
     protected MemberObject memberObject;
@@ -91,10 +94,8 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
             BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
             if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
-        }
-
-        if (!pathfinderFpAlertObject.getEdd().isEmpty() && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
-            lastVisit = PathfinderFpDao.getLatestFpVisit(memberObject.getBaseEntityId());
+        } else if (!pathfinderFpAlertObject.getEdd().isEmpty() && pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
+            lastVisit = PathfinderFpDao.getLatestVisit(memberObject.getBaseEntityId(), FAMILY_PLANNING_PREGNANCY_SCREENING+"' OR visit_type = '"+FAMILY_PLANNING_PREGNANCY_TEST_REFERRAL_FOLLOWUP);
             lastVisitDate = lastVisit.getDate();
             alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantWomenFpRules(), lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpAlertObject.getEdd()), fp_pillCycles, fpMethod);
 
@@ -105,23 +106,30 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
             BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
             if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
-        }
+        } else if (pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
+            lastVisit = PathfinderFpDao.getLatestVisit(memberObject.getBaseEntityId(), FAMILY_PLANNING_PREGNANCY_SCREENING+"' OR visit_type = '"+FAMILY_PLANNING_PREGNANCY_TEST_REFERRAL_FOLLOWUP);
+            lastVisitDate = lastVisit.getDate();
 
-        if (pathfinderFpAlertObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
-            alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules(), lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpAlertObject.getFpPregnancyScreeningDate()), fp_pillCycles, fpMethod);
+            if (pathfinderFpAlertObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT)) {
+                alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules(), lastVisitDate, lastVisitDate, 0, fpMethod);
+                serviceName = context.getString(R.string.pregnancy_screening_followup);
+            } else if (pathfinderFpAlertObject.isClientIsCurrentlyReferred()) {
+                Timber.e("Coze Mpanda : client is referred for fp test");
+                Timber.e("Coze Mpanda : last visit date = "+lastVisitDate.toString());
+                Timber.e("Coze Mpanda : fp date = "+pathfinderFpAlertObject.getFpPregnancyScreeningDate());
+                alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantTestReferralFollowupRules(), lastVisitDate, lastVisitDate, 0, fpMethod);
+                serviceName = context.getString(R.string.fp_pregnancy_test_followup);
+            }
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
-            if (pathfinderFpAlertObject.getChoosePregnancyTestReferral().equals(PathfinderFamilyPlanningConstants.ChoosePregnancyTestReferral.WAIT_FOR_NEXT_VISIT))
-                serviceName = context.getString(R.string.pregnancy_screening_followup);
-            else
-                serviceName = context.getString(R.string.fp_pregnancy_test_followup);
 
-                BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
+            Timber.e("Coze Mpanda : due date = "+alertRule.getDueDate().toString());
+            Timber.e("Coze Mpanda : over due date = "+alertRule.getDueDate().toString());
+
+            BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
             if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
-        }
-
-        if (pathfinderFpAlertObject.isManRequestedMethodForPartner()) {
+        } else if (pathfinderFpAlertObject.isManRequestedMethodForPartner()) {
             rule = PathfinderFamilyPlanningUtil.getManChosePartnersFpMethodFollowupRules();
             serviceName = context.getString(R.string.man_chose_fp_method_for_partner_followup);
 
@@ -133,9 +141,7 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
             BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
             if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
-        }
-
-        if (pathfinderFpAlertObject.isClientIsCurrentlyReferred()) {
+        } else if (pathfinderFpAlertObject.isClientIsCurrentlyReferred()) {
             rule = PathfinderFamilyPlanningUtil.getReferralFollowupRules();
             serviceName = context.getString(R.string.fp_referral_followup);
 

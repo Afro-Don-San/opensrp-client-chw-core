@@ -914,7 +914,8 @@ public class CoreConstants {
         public static final String FP_COC_POP_REFILL = "fp-coc-pop-refill-rule.yml";
         public static final String PATHFINDER_FP_COC_POP_REFILL = "pathfinder-fp-coc-pop-refill-rule.yml";
         public static final String PATHFINDER_PREGNANT_WOMAN_FP_FOLLOWUP = "pathfinder-pregnant-woman-followup-rule.yml";
-        public static final String PATHFINDER_PREGNANCY_SCREENING_AND_REFERRAL_FOLLOWUP = "pathfinder-pregnancy-screening-and-referral-followup-rule.yml";
+        public static final String PATHFINDER_PREGNANCY_SCREENING_FOLLOWUP = "pathfinder-pregnancy-screening-followup-rule.yml";
+        public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL_FOLLOWUP = "pathfinder-pregnancy-test-referral-followup-rule.yml";
         public static final String PATHFINDER_REFERRAL_REFERRAL_FOLLOWUP = "pathfinder-referral-followup-rule.yml";
         public static final String PATHFINDER_MAN_CHOSE_PARTNER_FP_METHOD_FOLLOWUP = "pathfinder-man-chose-partner-family-planning-method-followup-rule.yml";
         public static final String FP_CONDOM_REFILL = "fp-condom-refill-rule.yml";
