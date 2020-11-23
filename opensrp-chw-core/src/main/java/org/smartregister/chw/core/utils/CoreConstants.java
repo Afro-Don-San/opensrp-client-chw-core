@@ -248,6 +248,8 @@ public class CoreConstants {
         public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL = "pathfinder_pregnancy_test_referral";
         public static final String PATHFINDER_FP_METHOD_REFERRAL = "pathfinder_fp_method_referral";
         public static final String PATHFINDER_LOAN_UNIT_REFERRAL = "pathfinder_loan_unit_referral";
+        public static final String PATHFINDER_CLIMATE_SMART_AGRICULTURE_REFERRAL = "pathfinder_climate_smart_agriculture_referral";
+        public static final String PATHFINDER_MODEL_HOUSEHOLD_REFERRAL = "pathfinder_model_household_referral";
         public static final String PATHFINDER_BEACH_MANAGEMENT_UNIT_REFERRAL = "pathfinder_beach_management_unit_referral";
         public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL_FOLLOWUP = "pathfinder_pregnancy_test_referral_followup";
         public static final String PATHFINDER_HIV_REFERRAL = "pathfinder_hiv_referral";
@@ -456,6 +458,16 @@ public class CoreConstants {
 
         public static String getPathfinderLoanUnitReferral() {
             return PATHFINDER_LOAN_UNIT_REFERRAL;
+        }
+
+
+        public static String getPathfinderClimateSmartAgricultureReferral() {
+            return PATHFINDER_CLIMATE_SMART_AGRICULTURE_REFERRAL;
+        }
+
+
+        public static String getPathfinderModelHouseholdReferral() {
+            return PATHFINDER_MODEL_HOUSEHOLD_REFERRAL;
         }
 
         public static String getPathfinderBeachManagementUnitReferral() {
@@ -1152,6 +1164,8 @@ public class CoreConstants {
         public static final String SUSPECTED_STI = "Suspected STI";
         public static final String CTC_SERVICES = "Care and Treatment (CTC) services";
         public static final String BEACH_MANAGEMENT_UNIT = "Beach Management Unit";
+        public static final String CLIMATE_SMART_AGRICULTURE = "Climate Smart Agriculture";
+        public static final String MODEL_HOUSEHOLD = "Model Household";
     }
 
     public static final class REGISTER_TYPE {
