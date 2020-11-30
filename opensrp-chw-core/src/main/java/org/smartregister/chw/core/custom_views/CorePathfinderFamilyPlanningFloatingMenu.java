@@ -65,7 +65,7 @@ public class CorePathfinderFamilyPlanningFloatingMenu extends BaseFpFloatingMenu
         callLayout.setClickable(false);
 
         referLayout = findViewById(org.smartregister.chw.core.R.id.refer_to_facility_layout);
-        ((TextView) referLayout.findViewById(R.id.fab_text)).setText(this.getContext().getString(R.string.give_referral_to_other_available_services));
+        ((TextView) referLayout.findViewById(R.id.fab_text)).setText(this.getContext().getString(R.string.pathfinder_give_referral_to_other_available_services));
         referLayout.setOnClickListener(this);
         referLayout.setClickable(false);
 
