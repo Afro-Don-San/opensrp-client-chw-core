@@ -42,7 +42,6 @@ public class CorePathfinderFamilyPlanningProfileInteractor extends BasePathfinde
 
     @Override
     public void updateProfileFpStatusInfo(PathfinderFpMemberObject memberObject, BaseFpProfileContract.InteractorCallback callback) {
-        Timber.e("Coze :: updateProfileFpStatusInfo = ");
         Runnable runnable = new Runnable() {
             Date lastVisitDate = getLastVisitDate(memberObject);
             AlertStatus familyAlert = AlertDao.getFamilyAlertStatus(memberObject.getFamilyBaseEntityId());

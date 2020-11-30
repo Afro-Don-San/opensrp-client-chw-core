@@ -146,10 +146,8 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
         @Override
         protected void onPostExecute(Void param) {
             if (pathfinderFpMemberObject.isClientIsCurrentlyReferred()) {
-                Timber.e("Coze test : client is referred");
                 Rules rule;
                 if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
-                    Timber.e("Coze test : pregnancy screening");
                     lastVisit = PathfinderFpDao.getLatestVisit(pathfinderFpMemberObject.getBaseEntityId(),FAMILY_PLANNING_PREGNANCY_SCREENING+"' OR visit_type = '"+FAMILY_PLANNING_PREGNANCY_TEST_REFERRAL_FOLLOWUP);
                     lastVisitDate = lastVisit.getDate();
                     rule = PathfinderFamilyPlanningUtil.getPregnantTestReferralFollowupRules();
@@ -163,7 +161,6 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
                 }
 
             } else if (!pathfinderFpMemberObject.getFpStartDate().equals("") && !pathfinderFpMemberObject.getFpStartDate().equals("0")) {
-                Timber.e("Coze test : client given fp method");
                 Date lastVisitDate;
                 if (lastVisit == null) {
                     lastVisit = PathfinderFpDao.getLatestFpVisit(pathfinderFpMemberObject.getBaseEntityId());
@@ -178,14 +175,12 @@ public class CorePathfinderFpProvider extends BasePathfinderFpRegisterProvider {
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getFpStartDate()), pillCycles, pathfinderFpMemberObject.getFpMethod());
 
             } else if (pathfinderFpMemberObject.isPregnancyScreeningDone() && !pathfinderFpMemberObject.getEdd().equals("") && pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.PREGNANT)) {
-                Timber.e("Coze test : client is pregnant");
                 Date lastVisitDate;
                 lastVisit = PathfinderFpDao.getLatestVisit(pathfinderFpMemberObject.getBaseEntityId(), FAMILY_PLANNING_PREGNANCY_SCREENING+"' OR visit_type = '"+FAMILY_PLANNING_PREGNANCY_TEST_REFERRAL_FOLLOWUP);
                 lastVisitDate = lastVisit.getDate();
                 Rules rule = PathfinderFamilyPlanningUtil.getPregnantWomenFpRules();
                 fpAlertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, FpUtil.parseFpStartDate(pathfinderFpMemberObject.getEdd()), 0, pathfinderFpMemberObject.getPregnancyStatus());
             } else if (pathfinderFpMemberObject.getPregnancyStatus().equals(PathfinderFamilyPlanningConstants.PregnancyStatus.NOT_UNLIKELY_PREGNANT)) {
-                Timber.e("Coze test : client is not unlikely pregnant");
                 Date lastVisitDate;
                 lastVisit = PathfinderFpDao.getLatestVisit(pathfinderFpMemberObject.getBaseEntityId(), FAMILY_PLANNING_PREGNANCY_SCREENING+"' OR visit_type = '"+FAMILY_PLANNING_PREGNANCY_TEST_REFERRAL_FOLLOWUP);
                 lastVisitDate = lastVisit.getDate();

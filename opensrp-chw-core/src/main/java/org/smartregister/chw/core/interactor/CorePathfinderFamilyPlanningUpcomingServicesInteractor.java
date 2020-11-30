@@ -88,7 +88,6 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
         lastVisitDate = lastVisit.getDate();
         PathfinderFpAlertRule alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(rule, lastVisitDate, fpDate, fp_pillCycles, fpMethod);
         if (pathfinderFpAlertObject.isClientIsCurrentlyReferred()) {
-            Timber.e("Coze Mpanda : client is currently referred");
             rule = PathfinderFamilyPlanningUtil.getReferralFollowupRules();
             serviceName = context.getString(R.string.fp_referral_followup);
 
@@ -136,19 +135,11 @@ public class CorePathfinderFamilyPlanningUpcomingServicesInteractor extends Base
                 alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantScreeningFollowupRules(), lastVisitDate, lastVisitDate, 0, fpMethod);
                 serviceName = context.getString(R.string.pregnancy_screening_followup);
             } else if (pathfinderFpAlertObject.isClientIsCurrentlyReferred()) {
-                Timber.e("Coze Mpanda : client is referred for fp test");
-                Timber.e("Coze Mpanda : last visit date = " + lastVisitDate.toString());
-                Timber.e("Coze Mpanda : fp date = " + pathfinderFpAlertObject.getFpPregnancyScreeningDate());
-
                 alertRule = PathfinderFamilyPlanningUtil.getFpVisitStatus(PathfinderFamilyPlanningUtil.getPregnantTestReferralFollowupRules(), lastVisitDate, lastVisitDate, 0, fpMethod);
                 serviceName = context.getString(R.string.fp_pregnancy_test_followup);
             }
             serviceDueDate = alertRule.getDueDate();
             serviceOverDueDate = alertRule.getOverDueDate();
-
-            Timber.e("Coze Mpanda : due date = " + alertRule.getDueDate().toString());
-            Timber.e("Coze Mpanda : over due date = " + alertRule.getDueDate().toString());
-
             BaseUpcomingService baseUpcomingService = generateUpcomingService(serviceName, serviceDueDate, serviceOverDueDate);
             if (baseUpcomingService != null)
                 serviceList.add(baseUpcomingService);
