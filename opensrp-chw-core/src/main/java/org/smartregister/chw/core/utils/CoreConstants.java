@@ -192,6 +192,30 @@ public class CoreConstants {
         public static final String HOME_VISIT_COUNSELLING = "routine_home_visit";
         public static final String COMMUNITY_RESPONDER_REGISTRATION_FORM = "community_responder_registration";
         public static final String IN_APP_REPORT_FORM = "in_app_monthly_tallies_report";
+        public static final String PATHFINDER_FAMILY_PLANNING_REGISTRATION_FORM = "pathfinder_female_family_planning_registration";
+        public static final String PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM = "pathfinder_family_planning_change_method";
+        public static final String PATHFINDER_FAMILY_PLANNING_INTRODUCTION = "pathfinder_family_planning_introduction";
+        public static final String PATHFINDER_PREGNANCY_SCREENING = "pathfinder_pregnancy_screening";
+        public static final String PATHFINDER_CHOOSE_FAMILY_PLANNING_METHOD = "pathfinder_family_planning_method_choice";
+        public static final String PATHFINDER_GIVE_FAMILY_PLANNING_METHOD = "pathfinder_give_family_planning_method";
+        public static final String PATHFINDER_RISK_ASSESSMENT_HIV_TESTING_DUAL_PROTECTION_COUNSELING = "pathfinder_risk_assessment_hiv_testing_dual_protection_counseling";
+        public static final String PATHFINDER_ANC_REFERRAL = "pathfinder_anc_referral";
+        public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL = "pathfinder_pregnancy_test_referral";
+        public static final String PATHFINDER_FP_METHOD_REFERRAL = "pathfinder_fp_method_referral";
+        public static final String PATHFINDER_LOAN_UNIT_REFERRAL = "pathfinder_loan_unit_referral";
+        public static final String PATHFINDER_CLIMATE_SMART_AGRICULTURE_REFERRAL = "pathfinder_climate_smart_agriculture_referral";
+        public static final String PATHFINDER_MODEL_HOUSEHOLD_REFERRAL = "pathfinder_model_household_referral";
+        public static final String PATHFINDER_BEACH_MANAGEMENT_UNIT_REFERRAL = "pathfinder_beach_management_unit_referral";
+        public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL_FOLLOWUP = "pathfinder_pregnancy_test_referral_followup";
+        public static final String PATHFINDER_HIV_REFERRAL = "pathfinder_hiv_referral";
+        public static final String PATHFINDER_STI_REFERRAL = "pathfinder_sti_referral";
+        public static final String PATHFINDER_HTC_REFERRAL = "pathfinder_htc_referral";
+        public static final String PATHFINDER_CITIZEN_REPORT_CARD = "pathfinder_citizen_report_card";
+        public static final String PATHFINDER_FP_METHOD_COUNSELING_REFERRAL_FOLLOWUP = "pathfinder_fp_method_counseling_referral_followup";
+        public static final String PATHFINDER_FP_METHOD_REFERRAL_FOLLOWUP = "pathfinder_fp_method_referral_followup";
+        public static final String PATHFINDER_FP_METHOD_REFILL_REFERRAL = "pathfinder_fp_method_refill_referral";
+        public static final String PATHFINDER_FP_METHOD_REFILL_REFERRAL_FOLLOWUP = "pathfinder_fp_method_refill_referral_followup";
+        public static final String PATHFINDER_COMMUNITY_CONSERVATION = "pathfinder_community_conservation";
         private static final String ANC_REGISTRATION = "anc_member_registration";
         private static final String PREGNANCY_OUTCOME = "anc_pregnancy_outcome";
         private static final String MALARIA_CONFIRMATION = "malaria_confirmation";
@@ -235,33 +259,6 @@ public class CoreConstants {
         private static final String TB_COMMUNITY_FOLLOW_FEEDBACK = "tb_community_followup_feedback";
         private static final String ALL_CLIENT_REGISTRATION_FORM = "all_clients_registration_form";
         private static final String ALL_CLIENT_UPDATE_REGISTRATION_INFO_FORM = "all_clients_update_registration_info_form";
-
-
-        public static final String PATHFINDER_FAMILY_PLANNING_REGISTRATION_FORM = "pathfinder_female_family_planning_registration";
-        public static final String PATHFINDER_FAMILY_PLANNING_CHANGE_METHOD_FORM = "pathfinder_family_planning_change_method";
-        public static final String PATHFINDER_FAMILY_PLANNING_INTRODUCTION = "pathfinder_family_planning_introduction";
-        public static final String PATHFINDER_PREGNANCY_SCREENING = "pathfinder_pregnancy_screening";
-        public static final String PATHFINDER_CHOOSE_FAMILY_PLANNING_METHOD = "pathfinder_family_planning_method_choice";
-        public static final String PATHFINDER_GIVE_FAMILY_PLANNING_METHOD = "pathfinder_give_family_planning_method";
-        public static final String PATHFINDER_RISK_ASSESSMENT_HIV_TESTING_DUAL_PROTECTION_COUNSELING = "pathfinder_risk_assessment_hiv_testing_dual_protection_counseling";
-        public static final String PATHFINDER_ANC_REFERRAL = "pathfinder_anc_referral";
-        public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL = "pathfinder_pregnancy_test_referral";
-        public static final String PATHFINDER_FP_METHOD_REFERRAL = "pathfinder_fp_method_referral";
-        public static final String PATHFINDER_LOAN_UNIT_REFERRAL = "pathfinder_loan_unit_referral";
-        public static final String PATHFINDER_CLIMATE_SMART_AGRICULTURE_REFERRAL = "pathfinder_climate_smart_agriculture_referral";
-        public static final String PATHFINDER_MODEL_HOUSEHOLD_REFERRAL = "pathfinder_model_household_referral";
-        public static final String PATHFINDER_BEACH_MANAGEMENT_UNIT_REFERRAL = "pathfinder_beach_management_unit_referral";
-        public static final String PATHFINDER_PREGNANCY_TEST_REFERRAL_FOLLOWUP = "pathfinder_pregnancy_test_referral_followup";
-        public static final String PATHFINDER_HIV_REFERRAL = "pathfinder_hiv_referral";
-        public static final String PATHFINDER_STI_REFERRAL = "pathfinder_sti_referral";
-        public static final String PATHFINDER_HTC_REFERRAL = "pathfinder_htc_referral";
-        public static final String PATHFINDER_CITIZEN_REPORT_CARD = "pathfinder_citizen_report_card";
-        public static final String PATHFINDER_FP_METHOD_COUNSELING_REFERRAL_FOLLOWUP = "pathfinder_fp_method_counseling_referral_followup";
-        public static final String PATHFINDER_FP_METHOD_REFERRAL_FOLLOWUP = "pathfinder_fp_method_referral_followup";
-        public static final String PATHFINDER_FP_METHOD_REFILL_REFERRAL = "pathfinder_fp_method_refill_referral";
-        public static final String PATHFINDER_FP_METHOD_REFILL_REFERRAL_FOLLOWUP = "pathfinder_fp_method_refill_referral_followup";
-
-
         public static AssetManager assetManager;
         public static Locale locale;
 
@@ -504,6 +501,10 @@ public class CoreConstants {
 
         public static String getPathfinderFpMethodRefillReferralFollowup() {
             return PATHFINDER_FP_METHOD_REFILL_REFERRAL_FOLLOWUP;
+        }
+
+        public static String getPathfinderCommunityConservation() {
+            return PATHFINDER_COMMUNITY_CONSERVATION;
         }
 
         public static String getPathfinderFpMethodRefillReferral() {
@@ -1159,6 +1160,7 @@ public class CoreConstants {
         public static final String SUSPECTED_GBV = "Suspected GBV";
         public static final String SUSPECTED_CHILD_GBV = "Suspected Child GBV";
         public static final String LOAN_MANAGEMENT_UNIT = "Loan Management Unit";
+        public static final String COMMUNITY_CONSERVATION = "Community Conservation";
         public static final String FP_METHOD = "FP Method";
         public static final String PREGNANCY_TEST = "Pregnancy Test";
         public static final String SUSPECTED_STI = "Suspected STI";
